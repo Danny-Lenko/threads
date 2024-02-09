@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
       ref: "Thread",
     },
   ],
-  savedThread: [
+  savedThreads: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Thread",

@@ -25,7 +25,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
 
 import { UserValidation } from "@/lib/validations/user";
-import { updateUser } from "@/lib/actions/user.actions";
+import { updateUser } from "@/lib/actions/user";
 
 interface Props {
   user: {
@@ -61,8 +61,6 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     const blob = values.profile_photo;
-
-    console.log("FILES:", files);
 
     const hasImageChanged = isBase64Image(blob);
     if (hasImageChanged) {

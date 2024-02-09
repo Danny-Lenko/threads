@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
 import DeleteThread from "../forms/DeleteThread";
+import HeartIcon from "../shared/HeartIcon";
 
 interface Props {
   id: string;
@@ -25,6 +26,7 @@ interface Props {
       image: string;
     };
   }[];
+  isSaved: boolean;
   isComment?: boolean;
 }
 
@@ -71,13 +73,9 @@ function ThreadCard({
 
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
-                <Image
-                  // title="Save"
-                  src="/assets/heart-gray.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
+                <HeartIcon
+                  userId={currentUserId}
+                  threadId={JSON.stringify(id)}
                 />
                 <Link href={`/thread/${id}`}>
                   <Image

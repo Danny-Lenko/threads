@@ -45,3 +45,31 @@ export async function updateUser({
     throw new Error(`Failed to create/update user: ${error.message}`);
   }
 }
+
+interface SaveThread {
+  userId: string;
+  threadId: string;
+}
+
+export async function saveThread({
+  userId,
+  threadId,
+}: SaveThread): Promise<void> {
+  try {
+    connectToDB();
+
+    const user = await User.findOne({ id: userId });
+
+    const threadIndex = user.savedThreads.indexOf(threadId);
+    if (threadIndex !== -1) {
+      user.savedThreads.splice(threadIndex, 1);
+    } else {
+      user.savedThreads.push(threadId);
+    }
+
+    await user.save();
+
+  } catch (error: any) {
+    throw new Error(`Failed to save thread: ${error.message}`);
+  }
+}
