@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
       ref: "Thread",
     },
   ],
+  savedThread: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Thread",
+    },
+  ],
   onboarded: {
     type: Boolean,
     default: false,
