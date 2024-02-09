@@ -26,7 +26,6 @@ interface Props {
       image: string;
     };
   }[];
-  isSaved: boolean;
   isComment?: boolean;
 }
 

@@ -43,7 +43,6 @@ async function Home({
                 community={post.community}
                 createdAt={post.createdAt}
                 comments={post.children}
-                isSaved={false}
               />
             ))}
           </>
