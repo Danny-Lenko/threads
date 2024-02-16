@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import ThreadCard from "@/components/cards/ThreadCard";
 import Pagination from "@/components/shared/Pagination";
 
-import { fetchThreads } from "@/lib/actions/thread.actions";
+import { fetchThreads } from "@/lib/actions/thread/read.actions";
 import { fetchUser } from "@/lib/actions/user";
 
 async function Home({
