@@ -57,8 +57,6 @@ export async function fetchUserReplies(
   // Calculate the number of threads to skip based on the page number and page size.
   const skipAmount = (pageNumber - 1) * pageSize;
 
-  console.log("USERID:", userId);
-
   // Create a query to fetch threads created by the user and that have parent IDs.
   const repliesQuery = Thread.find({
     author: userId,
@@ -75,9 +73,20 @@ export async function fetchUserReplies(
       path: "community",
       model: Community,
     })
+    // .populate({
+    //   path: "parentId", // Populate the parent thread
+    //   populate({
+    //     path: "author",
+    //     model: User
+    //   })
     .populate({
-      path: "parentId", // Populate the parent thread
+      path: "parentId", // Populate the children field
       model: Thread,
+      populate: {
+        path: "author", // Populate the author field within children
+        model: User,
+        select: "_id name parentId image", // Select only _id and username fields of the author
+      },
     });
 
   // Count the total number of threads created by the user and that have parent IDs.
