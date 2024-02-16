@@ -7,14 +7,6 @@ import Community from "../../models/community.model";
 import { connectToDB } from "../../mongoose";
 import { ObjectId } from "mongoose";
 
-// import { revalidatePath } from "next/cache";
-// interface Params {
-//   text: string;
-//   author: string;
-//   communityId: string | null;
-//   path: string;
-// }
-
 export async function fetchThreads(pageNumber = 1, pageSize = 20) {
   connectToDB();
 
@@ -65,6 +57,7 @@ export async function fetchUserReplies(
   // Calculate the number of threads to skip based on the page number and page size.
   const skipAmount = (pageNumber - 1) * pageSize;
 
+  console.log("USERID:", userId);
 
   // Create a query to fetch threads created by the user and that have parent IDs.
   const repliesQuery = Thread.find({
@@ -84,7 +77,7 @@ export async function fetchUserReplies(
     })
     .populate({
       path: "parentId", // Populate the parent thread
-      model: Thread
+      model: Thread,
     });
 
   // Count the total number of threads created by the user and that have parent IDs.
