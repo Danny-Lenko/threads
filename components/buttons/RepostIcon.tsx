@@ -1,10 +1,13 @@
 "use client";
 
-// import { useCallback } from "react";
+import { useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-// import useSWR, { useSWRConfig } from "swr";
+import useSWR, { useSWRConfig } from "swr";
+import { useOrganization } from "@clerk/nextjs";
 
-// import { fetchClientSideUser, saveThread } from "@/lib/actions/user";
+import { fetchClientSideUser, saveThread } from "@/lib/actions/user";
+import User from "@/lib/models/user.model";
 
 import {
   DropdownMenu,
@@ -15,22 +18,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { createRepost } from "@/lib/actions/repost/create.actions";
+
 interface Props {
   userId: string;
   threadId: string;
 }
 
 function RepostIcon({ userId, threadId }: Props) {
-  //   const { data: userInfo } = useSWR("/api/userInfo", () =>
-  //     fetchClientSideUser(userId)
-  //   );
+  const pathname = usePathname();
 
-  //   const { mutate } = useSWRConfig();
+  const { data: userInfo } = useSWR("/api/userInfo", () =>
+    fetchClientSideUser(userId)
+  );
 
-  //   const handleClick = useCallback(async () => {
-  //     await saveThread({ userId, threadId: JSON.parse(threadId) });
-  //     mutate("/api/userInfo");
-  //   }, [userId, threadId, mutate]);
+  console.log("USERINFO:", userInfo && JSON.parse(userInfo)._id);
+
+  const { organization } = useOrganization();
+
+  const { mutate } = useSWRConfig();
+
+  const handleClick = useCallback(async () => {
+    console.log("PARAMS:", {
+      author: userInfo && JSON.parse(userInfo)._id,
+      communityId: organization ? organization.id : null,
+      source: JSON.parse(threadId),
+      path: pathname,
+    });
+
+    await createRepost({
+      author: JSON.parse(userInfo!)._id,
+      communityId: organization ? organization.id : null,
+      source: JSON.parse(threadId),
+      path: pathname,
+    });
+    // await saveThread({ userId, threadId: JSON.parse(threadId) });
+    // mutate("/api/userInfo");
+  }, [userId, threadId, mutate, userInfo]);
 
   //   if (!userInfo) return null;
 
@@ -57,7 +81,10 @@ function RepostIcon({ userId, threadId }: Props) {
         className="border-gray-700 bg-black text-small-regular hover:bg-gray-700"
         align="start"
       >
-        <DropdownMenuItem className="cursor-pointer py-0 text-white hover:bg-gray-700 focus:bg-gray-700 focus:text-white">
+        <DropdownMenuItem
+          onClick={handleClick}
+          className="cursor-pointer py-0 text-white hover:bg-gray-700 focus:bg-gray-700 focus:text-white"
+        >
           Repost
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -50,6 +50,6 @@ export async function createRepost({
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to create thread: ${error.message}`);
+    throw new Error(`Failed to create repost: ${error.message}`);
   }
 }
