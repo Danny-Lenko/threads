@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
 import DeleteThread from "../forms/DeleteThread";
-import HeartIcon from "../shared/HeartIcon";
+import HeartIcon from "../buttons/HeartIcon";
+import RepostIcon from "../buttons/RepostIcon";
 
 interface Props {
   id: string;
@@ -86,14 +87,18 @@ function ThreadCard({
                     className="cursor-pointer object-contain"
                   />
                 </Link>
-                <Image
-                  // title="Report"
+                <RepostIcon
+                  userId={currentUserId}
+                  threadId={JSON.stringify(id)}
+                />
+                {/* <Image
+                  title="Repost"
                   src="/assets/repost.svg"
                   alt="heart"
                   width={24}
                   height={24}
                   className="cursor-pointer object-contain"
-                />
+                /> */}
                 <Image
                   // title="Share"
                   src="/assets/share.svg"

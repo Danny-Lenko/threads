@@ -53,6 +53,7 @@ async function Page({ params }: { params: { id: string } }) {
           </TabsList>
 
           <TabsContent value="threads" className="w-full text-light-1">
+            {/* @ts-ignore */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={userInfo.id}
@@ -81,23 +82,3 @@ async function Page({ params }: { params: { id: string } }) {
   );
 }
 export default Page;
-
-// {profileTabs.map((tab) => (
-//   <TabsContent
-//     key={`content-${tab.label}`}
-//     value={tab.value}
-//     className="w-full text-light-1"
-//   >
-//     {/* @ts-ignore */}
-//     <ThreadsTab
-//       currentUserId={user.id}
-//       accountId={userInfo.id}
-//       accountType="User"
-//     />
-//     <RepliesTab
-//       currentUserId={user.id}
-//       accountId={userInfo._id}
-//       accountType="User"
-//     />
-//   </TabsContent>
-// ))}

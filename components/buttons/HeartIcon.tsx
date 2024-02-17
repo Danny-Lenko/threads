@@ -29,7 +29,7 @@ function HeartIcon({ userId, threadId }: Props) {
     userInfo &&
     JSON.parse(userInfo).savedThreads.includes(JSON.parse(threadId));
 
-  const title = isSaved ? "Untag" : "Save";
+  const title = isSaved ? "Untag" : "Like";
   const src = isSaved ? "/assets/heart-filled.svg" : "/assets/heart-gray.svg";
 
   return (

@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
       ref: "Community",
     },
   ],
+  reposts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Repost",
+    },
+  ],
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

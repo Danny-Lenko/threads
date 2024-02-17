@@ -26,6 +26,12 @@ const communitySchema = new mongoose.Schema({
       ref: "Thread",
     },
   ],
+  reposts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Repost",
+    },
+  ],
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
