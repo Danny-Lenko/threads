@@ -1,17 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-// import { formatDateString } from "@/lib/utils";
 import DeleteThread from "../forms/DeleteThread";
 import ThreadCard from "./ThreadCard";
-// import HeartIcon from "../buttons/HeartIcon";
-// import RepostIcon from "../buttons/RepostIcon";
+import { fetchThreadById } from "@/lib/actions/thread.actions";
 
 interface Props {
   id: string;
   currentUserId: string;
-  // parentId: string | null;
-  // content: string;
   author: {
     name: string;
     image: string;
@@ -24,28 +20,13 @@ interface Props {
   } | null;
   createdAt: string;
   source: string;
-  // comments: {
-  //   author: {
-  //     image: string;
-  //   };
-  // }[];
-  // isComment?: boolean;
 }
 
-function RepostCard({
-  id,
-  currentUserId,
-  // parentId,
-  // content,
-  author,
-  community,
-  createdAt,
-  // comments,
-  // isComment,
-  source: string,
-}: Props) {
+async function RepostCard({ id, currentUserId, author, source }: Props) {
+  const thread = await fetchThreadById(source);
+
   return (
-    <article className={`flex w-full flex-col rounded-xl`}>
+    <article className={`flex w-full flex-col rounded-xl bg-dark-2 p-4`}>
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
@@ -57,20 +38,31 @@ function RepostCard({
                 className="cursor-pointer rounded-full"
               />
             </Link>
-
-            {/* <div className="thread-card_bar" /> */}
           </div>
 
           <div className="flex w-full flex-col">
-            <Link href={`/profile/${author.id}`} className="w-fit">
-              <h4 className="cursor-pointer text-base-semibold text-light-1">
-                {author.name}
-              </h4>
-            </Link>
+            <div className="flex items-end gap-3">
+              <Link href={`/profile/${author.id}`} className="w-fit">
+                <h4 className="cursor-pointer text-base-semibold text-light-1">
+                  {author.name}
+                </h4>
+              </Link>
+              <p className="text-small-light text-light-1">reposted</p>
+            </div>
 
-            <div className="mt-2 text-small-regular text-light-2">
+            <div className="text-small-regular text-light-2">
               {
-                <ThreadCard />
+                <ThreadCard
+                  id={thread._id}
+                  currentUserId={currentUserId}
+                  parentId={null}
+                  content={thread.text}
+                  author={thread.author}
+                  community={thread.community}
+                  createdAt={thread.createdAt}
+                  comments={[]}
+                  isRepost
+                />
               }
             </div>
           </div>

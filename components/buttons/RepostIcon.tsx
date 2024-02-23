@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// import { createRepost } from "@/lib/actions/repost/create.actions";
 import { createRepost } from "@/lib/actions/thread/create.actions";
 
 interface Props {
@@ -29,8 +28,6 @@ function RepostIcon({ userId, threadId }: Props) {
   const { data: userInfo } = useSWR("/api/userInfo", () =>
     fetchClientSideUser(userId)
   );
-
-  console.log("USERINFO:", userInfo && JSON.parse(userInfo)._id);
 
   const { organization } = useOrganization();
 
@@ -50,18 +47,7 @@ function RepostIcon({ userId, threadId }: Props) {
       source: JSON.parse(threadId),
       path: pathname,
     });
-    // await saveThread({ userId, threadId: JSON.parse(threadId) });
-    // mutate("/api/userInfo");
   }, [userId, threadId, mutate, userInfo]);
-
-  //   if (!userInfo) return null;
-
-  //   const isSaved =
-  //     userInfo &&
-  //     JSON.parse(userInfo).savedThreads.includes(JSON.parse(threadId));
-
-  //   const title = isSaved ? "Untag" : "Save";
-  //   const src = isSaved ? "/assets/heart-filled.svg" : "/assets/heart-gray.svg";
 
   return (
     <DropdownMenu>

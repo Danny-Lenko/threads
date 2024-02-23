@@ -93,6 +93,13 @@ module.exports = {
           fontWeight: "700",
         },
       ],
+      "base-light": [
+        "16px",
+        {
+          lineHeight: "140%",
+          fontWeight: "300",
+        },
+      ],
       "base-regular": [
         "16px",
         {
@@ -119,6 +126,13 @@ module.exports = {
         {
           lineHeight: "140%",
           fontWeight: "600",
+        },
+      ],
+      "small-light": [
+        "14px",
+        {
+          lineHeight: "140%",
+          fontWeight: "300",
         },
       ],
       "small-regular": [
