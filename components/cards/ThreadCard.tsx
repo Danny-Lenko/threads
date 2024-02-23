@@ -41,7 +41,6 @@ function ThreadCard({
   comments,
   isComment,
 }: Props) {
-  console.log("COMMUNITY:", community);
 
   return (
     <article
@@ -93,14 +92,6 @@ function ThreadCard({
                   userId={currentUserId}
                   threadId={JSON.stringify(id)}
                 />
-                {/* <Image
-                  title="Repost"
-                  src="/assets/repost.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                /> */}
                 <Image
                   // title="Share"
                   src="/assets/share.svg"

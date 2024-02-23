@@ -1,24 +1,22 @@
 "use client";
 
 import { useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import useSWR, { useSWRConfig } from "swr";
 import { useOrganization } from "@clerk/nextjs";
 
-import { fetchClientSideUser, saveThread } from "@/lib/actions/user";
-import User from "@/lib/models/user.model";
+import { fetchClientSideUser } from "@/lib/actions/user";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  // DropdownMenuLabel,
-  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { createRepost } from "@/lib/actions/repost/create.actions";
+// import { createRepost } from "@/lib/actions/repost/create.actions";
+import { createRepost } from "@/lib/actions/thread/create.actions";
 
 interface Props {
   userId: string;

@@ -6,6 +6,7 @@ import Pagination from "@/components/shared/Pagination";
 
 import { fetchThreads } from "@/lib/actions/thread/read.actions";
 import { fetchUser } from "@/lib/actions/user";
+import RepostCard from "@/components/cards/RepostCard";
 
 async function Home({
   searchParams,
@@ -23,6 +24,8 @@ async function Home({
     30
   );
 
+  console.log("RESULT:", result);
+
   return (
     <>
       <h1 className="head-text text-left">Home</h1>
@@ -32,19 +35,31 @@ async function Home({
           <p className="no-result">No threads found</p>
         ) : (
           <>
-            {result.threads.map((post) => (
-              <ThreadCard
-                key={post._id}
-                id={post._id}
-                currentUserId={user.id}
-                parentId={post.parentId}
-                content={post.text}
-                author={post.author}
-                community={post.community}
-                createdAt={post.createdAt}
-                comments={post.children}
-              />
-            ))}
+            {result.threads.map((post) =>
+              post.source ? (
+                <RepostCard
+                  key={post._id}
+                  id={post._id}
+                  currentUserId={user.id}
+                  author={post.author}
+                  community={post.community}
+                  createdAt={post.createdAt}
+                  source={post.source}
+                />
+              ) : (
+                <ThreadCard
+                  key={post._id}
+                  id={post._id}
+                  currentUserId={user.id}
+                  parentId={post.parentId}
+                  content={post.text}
+                  author={post.author}
+                  community={post.community}
+                  createdAt={post.createdAt}
+                  comments={post.children}
+                />
+              )
+            )}
           </>
         )}
       </section>

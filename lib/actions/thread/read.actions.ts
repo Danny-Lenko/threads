@@ -73,12 +73,6 @@ export async function fetchUserReplies(
       path: "community",
       model: Community,
     })
-    // .populate({
-    //   path: "parentId", // Populate the parent thread
-    //   populate({
-    //     path: "author",
-    //     model: User
-    //   })
     .populate({
       path: "parentId", // Populate the children field
       model: Thread,
