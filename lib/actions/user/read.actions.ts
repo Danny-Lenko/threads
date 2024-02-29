@@ -44,6 +44,7 @@ export async function fetchUserPosts(userId: string) {
     const threads = await User.findOne({ id: userId }).populate({
       path: "threads",
       model: Thread,
+      match: { source: undefined },
       populate: [
         {
           path: "community",
@@ -123,6 +124,49 @@ export async function fetchUsers({
     return { users, isNext };
   } catch (error) {
     console.error("Error fetching users:", error);
+    throw error;
+  }
+}
+
+export async function fetchUserReposts(userId: string): Promise<any> {
+  console.log("I AM FIRING");
+
+  try {
+    connectToDB();
+
+    // Find all threads authored by the user with the given userId
+    const reposts = await Thread.find({
+      author: userId,
+      source: { $ne: undefined },
+    }).populate({
+      path: "source",
+      model: Thread,
+      populate: [
+        {
+          path: "author",
+          model: User,
+          select: "name image id", // Select the "name" and "_id" fields from the "User" model
+        },
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+        },
+        {
+          path: "children",
+          model: Thread,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name image id", // Select the "name" and "_id" fields from the "User" model
+          },
+        },
+      ],
+    });
+
+    return reposts;
+  } catch (error) {
+    console.error("Error fetching user reposts:", error);
     throw error;
   }
 }

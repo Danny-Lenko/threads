@@ -1,39 +1,9 @@
 import { redirect } from "next/navigation";
 
-// import { fetchCommunityPosts } from "@/lib/actions/community.actions";
-// import { fetchUserPosts } from "@/lib/actions/user";
-
 import ThreadCard from "../cards/ThreadCard";
 import { Separator } from "@/components/ui/separator";
 import { fetchUserReplies } from "@/lib/actions/thread";
 import { ObjectId } from "mongoose";
-
-// interface Result {
-//   name: string;
-//   image: string;
-//   id: string;
-//   threads: {
-//     _id: string;
-//     text: string;
-//     parentId: string | null;
-//     author: {
-//       name: string;
-//       image: string;
-//       id: string;
-//     };
-//     community: {
-//       id: string;
-//       name: string;
-//       image: string;
-//     } | null;
-//     createdAt: string;
-//     children: {
-//       author: {
-//         image: string;
-//       };
-//     }[];
-//   }[];
-// }
 
 interface Props {
   currentUserId: string;
@@ -44,8 +14,6 @@ interface Props {
 async function RepliesTab({ currentUserId, accountId, accountType }: Props) {
   const result = await fetchUserReplies(accountId);
   const replies = result?.userReplies;
-
-  console.log("REPLIES:", result.userReplies);
 
   if (!result) {
     redirect("/");
