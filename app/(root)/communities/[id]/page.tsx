@@ -7,7 +7,7 @@ import UserCard from "@/components/cards/UserCard";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { MembershipDialog } from "@/components/communities/MembershipDialog";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import { User } from "@clerk/nextjs/dist/types/server";
@@ -34,16 +34,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
         type="Community"
       />
 
-      {!!userIsNotMember && (
-        <div
-          className="absolute right-0 top-0 max-h-20"
-          style={{ minHeight: "80px" }}
-        >
-          <Button className="community-card_btn absolute right-0 top-1/2 h-auto w-min -translate-y-1/2">
-            Request Membership
-          </Button>
-        </div>
-      )}
+      {!!userIsNotMember && <MembershipDialog />}
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">
