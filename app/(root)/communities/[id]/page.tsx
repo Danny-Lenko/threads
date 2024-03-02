@@ -7,16 +7,22 @@ import UserCard from "@/components/cards/UserCard";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { MembershipDialog } from "@/components/communities/MembershipDialog";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import { User } from "@clerk/nextjs/dist/types/server";
+import { MembershipBadge } from "@/components/communities/MembershipBadge";
 
 async function Page({ params: { id } }: { params: { id: string } }) {
   const user = await currentUser();
   if (!user) return null;
 
+  // console.log("USER:", user);
+
   const communityDetails = await fetchCommunityDetails(id);
+
+  console.log("COMMUNITY:", communityDetails);
 
   const userIsNotMember = communityDetails.members.find(
     (member: User) => member.id !== user.id
@@ -34,7 +40,12 @@ async function Page({ params: { id } }: { params: { id: string } }) {
         type="Community"
       />
 
-      {!!userIsNotMember && <MembershipDialog />}
+      {!!userIsNotMember && (
+        <MembershipDialog communityId={communityDetails.id} userId={user.id} />
+      )}
+      {!userIsNotMember && (
+        <MembershipBadge>You&apos;re a member</MembershipBadge>
+      )}
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">

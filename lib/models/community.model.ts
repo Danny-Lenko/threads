@@ -5,37 +5,58 @@ const communitySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   username: {
     type: String,
     unique: true,
     required: true,
   },
+
   name: {
     type: String,
     required: true,
   },
+
   image: String,
+
   bio: String,
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+
   threads: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Thread",
     },
   ],
+
   reposts: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Repost",
     },
   ],
+
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+  ],
+  
+  requests: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      introduction: {
+        type: String,
+        required: true
+      }
     },
   ],
 });

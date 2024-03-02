@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useReducer } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,16 +13,54 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
+import createRequest from "@/lib/actions/community/update.actions";
 
-export function MembershipDialog() {
-  const [count, setCount] = useState(0);
+interface Props {
+  communityId: string;
+  userId: string;
+}
+
+type State = {
+  text: string;
+  count: number;
+};
+
+type Action = {
+  type: string;
+  payload: string;
+};
+
+const initialState: State = {
+  text: "",
+  count: 0,
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "SET_TEXT":
+      return { ...state, text: action.payload, count: action.payload.length };
+    default:
+      return state;
+  }
+};
+
+export function MembershipDialog({ communityId, userId }: Props) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // console.log("STATE:", state);
+
+  const sendRequest = async () => {
+    const res = await createRequest({
+      communityId,
+      userId,
+      introduction: state.text,
+    });
+    console.log("RES:", res);
+  };
 
   return (
     <Dialog>
-      <div
-        className="absolute right-0 top-0 max-h-20"
-        style={{ minHeight: "80px" }}
-      >
+      <div className="absolute right-0 top-0 h-20">
         <DialogTrigger
           asChild
           className="community-card_btn absolute right-0 top-1/2 h-auto w-min -translate-y-1/2"
@@ -43,15 +81,21 @@ export function MembershipDialog() {
               placeholder="Type your message here."
               id="message-2"
               className="border-dark-5"
-              onChange={(e) => setCount(e.target.value.length)}
+              onChange={(e) => {
+                dispatch({ type: "SET_TEXT", payload: e.target.value });
+              }}
             />
             <p className="text-subtle-medium text-dark-5">
-              30/<span className="text-small-regular">{count}</span>/300
+              30/<span className="text-small-regular">{state.count}</span>/300
             </p>
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" className="border border-dark-5">
+          <Button
+            // type="submit"
+            className="border border-dark-5"
+            onClick={sendRequest}
+          >
             Send
           </Button>
         </DialogFooter>

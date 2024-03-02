@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import { useOrganization } from "@clerk/nextjs";
 
 import { fetchClientSideUser } from "@/lib/actions/user";
@@ -31,7 +31,7 @@ function RepostIcon({ userId, threadId }: Props) {
 
   const { organization } = useOrganization();
 
-  const { mutate } = useSWRConfig();
+  // const { mutate } = useSWRConfig();
 
   const handleClick = useCallback(async () => {
     console.log("PARAMS:", {
@@ -47,7 +47,7 @@ function RepostIcon({ userId, threadId }: Props) {
       source: JSON.parse(threadId),
       path: pathname,
     });
-  }, [userId, threadId, mutate, userInfo]);
+  }, [userId, threadId, userInfo]);
 
   return (
     <DropdownMenu>
