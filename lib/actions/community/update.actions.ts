@@ -4,6 +4,7 @@ import User from "@/lib/models/user.model";
 import Community from "../../models/community.model";
 
 import { connectToDB } from "../../mongoose";
+import { revalidatePath } from "next/cache";
 
 export async function updateCommunityInfo(
   communityId: string,
@@ -30,17 +31,18 @@ export async function updateCommunityInfo(
   }
 }
 
-async function createRequest({
+export async function createRequest({
   communityId,
   userId,
   introduction,
+  pathname,
 }: {
   communityId: string;
   userId: string;
   introduction: string;
+  pathname: string;
 }) {
   try {
-    //  const community = await Community.findById(communityId);
     const community = await Community.findOne({ id: communityId });
     const user = await User.findOne({ id: userId });
 
@@ -57,11 +59,9 @@ async function createRequest({
 
     await community.save();
 
-    return community;
+    revalidatePath(pathname);
   } catch (error) {
     console.error("Error updating community information:", error);
     throw error;
   }
 }
-
-export default createRequest;

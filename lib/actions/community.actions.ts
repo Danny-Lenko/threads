@@ -7,6 +7,7 @@ import Thread from "../models/thread.model";
 import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
+import { revalidatePath } from "next/cache";
 
 export async function createCommunity(
   id: string,
@@ -297,6 +298,37 @@ export async function deleteCommunity(communityId: string) {
     await Promise.all(updateUserPromises);
 
     return deletedCommunity;
+  } catch (error) {
+    console.error("Error deleting community: ", error);
+    throw error;
+  }
+}
+
+export async function deleteAllRequests({
+  communityId,
+  pathname,
+}: {
+  communityId: string;
+  pathname: string;
+}) {
+  try {
+    connectToDB();
+
+    const community = await Community.findOne({ id: communityId });
+
+    if (!community) {
+      throw new Error("Community not found");
+    }
+
+    // Clear the requests array
+    community.requests = [];
+
+    // Save the community to apply changes
+    await community.save();
+
+    revalidatePath(pathname);
+
+    // return community;
   } catch (error) {
     console.error("Error deleting community: ", error);
     throw error;

@@ -13,7 +13,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
-import createRequest from "@/lib/actions/community/update.actions";
+import { createRequest } from "@/lib/actions/community/update.actions";
+import { usePathname } from "next/navigation";
+import { deleteAllRequests } from "@/lib/actions/community.actions";
 
 interface Props {
   communityId: string;
@@ -45,17 +47,28 @@ const reducer = (state: State, action: Action): State => {
 };
 
 export function MembershipDialog({ communityId, userId }: Props) {
+  const pathname = usePathname();
+
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // console.log("STATE:", state);
+  const handleClick = async () => {
+    try {
+      await createRequest({
+        communityId,
+        userId,
+        introduction: state.text,
+        pathname,
+      });
+    } catch (error) {
+      console.log("ERROR:", error);
+    }
+  };
 
-  const sendRequest = async () => {
-    const res = await createRequest({
+  const handleClear = async () => {
+    await deleteAllRequests({
       communityId,
-      userId,
-      introduction: state.text,
+      pathname,
     });
-    console.log("RES:", res);
   };
 
   return (
@@ -91,10 +104,10 @@ export function MembershipDialog({ communityId, userId }: Props) {
           </div>
         </div>
         <DialogFooter>
+          <Button onClick={handleClear}>Clear All</Button>
           <Button
-            // type="submit"
             className="border border-dark-5"
-            onClick={sendRequest}
+            onClick={handleClick}
           >
             Send
           </Button>

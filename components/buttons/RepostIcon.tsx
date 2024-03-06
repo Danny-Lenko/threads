@@ -31,16 +31,7 @@ function RepostIcon({ userId, threadId }: Props) {
 
   const { organization } = useOrganization();
 
-  // const { mutate } = useSWRConfig();
-
   const handleClick = useCallback(async () => {
-    console.log("PARAMS:", {
-      author: userInfo && JSON.parse(userInfo)._id,
-      communityId: organization ? organization.id : null,
-      source: JSON.parse(threadId),
-      path: pathname,
-    });
-
     await createRepost({
       author: JSON.parse(userInfo!)._id,
       communityId: organization ? organization.id : null,
