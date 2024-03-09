@@ -1,6 +1,32 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
-const communitySchema = new mongoose.Schema({
+export interface User {
+  _id: Types.ObjectId;
+  id: string;
+  name: string;
+  username: string;
+  image?: string;
+}
+
+interface Request {
+  user: Types.ObjectId | User;
+  introduction: string;
+}
+
+export interface ICommunityDocument extends Document {
+  id: string;
+  username: string;
+  name: string;
+  members: Types.ObjectId[] | User[];
+  requests: Request[];
+  image?: string;
+  bio?: string;
+  createdBy?: Types.ObjectId | User;
+  threads?: Types.ObjectId[];
+  reposts?: Types.ObjectId[];
+}
+
+const communitySchema: Schema<ICommunityDocument> = new Schema({
   id: {
     type: String,
     required: true,
@@ -44,24 +70,27 @@ const communitySchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true
     },
   ],
-  
+
   requests: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        required: true
       },
       introduction: {
         type: String,
-        required: true
-      }
+        required: true,
+      },
     },
   ],
 });
 
 const Community =
-  mongoose.models.Community || mongoose.model("Community", communitySchema);
+  mongoose.models.Community ||
+  mongoose.model<ICommunityDocument>("Community", communitySchema);
 
 export default Community;

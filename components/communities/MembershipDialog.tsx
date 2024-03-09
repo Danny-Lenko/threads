@@ -25,22 +25,31 @@ interface Props {
 type State = {
   text: string;
   count: number;
+  open: boolean;
 };
 
-type Action = {
-  type: string;
-  payload: string;
-};
+type Action =
+  | {
+      type: "SET_TEXT";
+      payload: string;
+    }
+  | {
+      type: "SET_OPEN";
+      payload: boolean;
+    };
 
 const initialState: State = {
   text: "",
   count: 0,
+  open: false,
 };
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "SET_TEXT":
       return { ...state, text: action.payload, count: action.payload.length };
+    case "SET_OPEN":
+      return { ...state, open: action.payload };
     default:
       return state;
   }
@@ -59,6 +68,7 @@ export function MembershipDialog({ communityId, userId }: Props) {
         introduction: state.text,
         pathname,
       });
+      dispatch({ type: "SET_OPEN", payload: false });
     } catch (error) {
       console.log("ERROR:", error);
     }
@@ -71,8 +81,12 @@ export function MembershipDialog({ communityId, userId }: Props) {
     });
   };
 
+  const setOpen = (open: boolean) => {
+    dispatch({ type: "SET_OPEN", payload: open });
+  };
+
   return (
-    <Dialog>
+    <Dialog open={state.open} onOpenChange={(open) => setOpen(open)}>
       <div className="absolute right-0 top-0 h-20">
         <DialogTrigger
           asChild
@@ -105,10 +119,7 @@ export function MembershipDialog({ communityId, userId }: Props) {
         </div>
         <DialogFooter>
           <Button onClick={handleClear}>Clear All</Button>
-          <Button
-            className="border border-dark-5"
-            onClick={handleClick}
-          >
+          <Button className="border border-dark-5" onClick={handleClick}>
             Send
           </Button>
         </DialogFooter>

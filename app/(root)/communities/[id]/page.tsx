@@ -11,32 +11,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MembershipDialog } from "@/components/communities/MembershipDialog";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
-import { User } from "@clerk/nextjs/dist/types/server";
 import { MembershipBadge } from "@/components/communities/MembershipBadge";
+import MembershipRequestCard from "@/components/cards/MembershipRequestCard";
+import { User } from "@/lib/models/community.model";
 
 async function Page({ params: { id } }: { params: { id: string } }) {
   const user = await currentUser();
   if (!user) return null;
 
-  // console.log("USER:", user);
-
   const communityDetails = await fetchCommunityDetails(id);
+  const members = communityDetails.members as User[];
 
   console.log("COMMUNITY:", communityDetails);
 
-  const userIsNotMember = communityDetails.members.find(
-    (member: User) => member.id !== user.id
+  const userIsNotMember = communityDetails.members?.find(
+    (member) => member.id !== user.id
   );
 
   return (
     <section className="relative">
       <ProfileHeader
-        accountId={communityDetails.createdBy.id}
+        accountId={communityDetails.createdBy?.id as string}
         authUserId={user.id}
         name={communityDetails.name}
         username={communityDetails.username}
-        imgUrl={communityDetails.image}
-        bio={communityDetails.bio}
+        imgUrl={communityDetails.image!}
+        bio={communityDetails.bio!}
         type="Community"
       />
 
@@ -63,7 +63,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
 
                 {tab.label === "Threads" && (
                   <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
-                    {communityDetails.threads.length}
+                    {communityDetails.threads?.length}
                   </p>
                 )}
               </TabsTrigger>
@@ -81,13 +81,13 @@ async function Page({ params: { id } }: { params: { id: string } }) {
 
           <TabsContent value="members" className="mt-9 w-full text-light-1">
             <section className="mt-9 flex flex-col gap-10">
-              {communityDetails.members.map((member: any) => (
+              {members.map((member) => (
                 <UserCard
                   key={member.id}
                   id={member.id}
                   name={member.name}
                   username={member.username}
-                  imgUrl={member.image}
+                  imgUrl={member.image!}
                   personType="User"
                 />
               ))}
@@ -96,11 +96,22 @@ async function Page({ params: { id } }: { params: { id: string } }) {
 
           <TabsContent value="requests" className="w-full text-light-1">
             {/* @ts-ignore */}
-            <ThreadsTab
-              currentUserId={user.id}
-              accountId={communityDetails._id}
-              accountType="Community"
-            />
+            <section className="mt-9 flex flex-col gap-7">
+              {communityDetails.requests.map(({ user, introduction }) => {
+                if (!("name" in user)) return null;
+
+                return (
+                  <MembershipRequestCard
+                    key={user.id}
+                    id={user.id}
+                    name={user.name}
+                    username={user.username}
+                    imgUrl={user.image!}
+                    personType="User"
+                  />
+                );
+              })}
+            </section>
           </TabsContent>
         </Tabs>
       </div>
