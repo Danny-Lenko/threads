@@ -10,6 +10,7 @@ interface Props {
   username: string;
   imgUrl: string;
   personType: string;
+  orgId: string;
 }
 
 function MembershipRequestCard({
@@ -18,15 +19,20 @@ function MembershipRequestCard({
   username,
   imgUrl,
   personType,
+  orgId,
 }: Props) {
   const auth = useAuth();
-  const list = useOrganizationList();
+  const { organizationList } = useOrganizationList();
 
   const role = auth.orgRole?.toString();
 
-  console.log("ORGANIZATIONLIST:", list);
+  console.log("ORGANIZATIONLIST:", organizationList);
 
-  console.log("ROLE:", role);
+  const isMember = organizationList?.find(
+    (org) => org.organization.id === orgId
+  );
+
+  console.log("isMember:", isMember);
 
   return (
     <div className="flex w-full items-center gap-2 [&>*:first-child]:flex-1">

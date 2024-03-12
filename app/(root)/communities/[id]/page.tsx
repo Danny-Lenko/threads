@@ -24,9 +24,9 @@ async function Page({ params: { id } }: { params: { id: string } }) {
 
   console.log("COMMUNITY:", communityDetails);
 
-  const userIsNotMember = communityDetails.members?.find(
-    (member) => member.id !== user.id
-  );
+  // let userIsNotMember;
+
+  const userIsNotMember = members?.find((member) => member.id !== user.id);
 
   return (
     <section className="relative">
@@ -97,20 +97,27 @@ async function Page({ params: { id } }: { params: { id: string } }) {
           <TabsContent value="requests" className="w-full text-light-1">
             {/* @ts-ignore */}
             <section className="mt-9 flex flex-col gap-7">
-              {communityDetails.requests.map(({ user, introduction }) => {
-                if (!("name" in user)) return null;
+              {userIsNotMember ? (
+                <h2 className="text-center text-heading3-semibold text-slate-500">
+                  This content is for members only
+                </h2>
+              ) : (
+                communityDetails.requests.map(({ user, introduction }) => {
+                  if (!("name" in user)) return null;
 
-                return (
-                  <MembershipRequestCard
-                    key={user.id}
-                    id={user.id}
-                    name={user.name}
-                    username={user.username}
-                    imgUrl={user.image!}
-                    personType="User"
-                  />
-                );
-              })}
+                  return (
+                    <MembershipRequestCard
+                      key={user.id}
+                      id={user.id}
+                      name={user.name}
+                      username={user.username}
+                      imgUrl={user.image!}
+                      personType="User"
+                      orgId={communityDetails.id}
+                    />
+                  );
+                })
+              )}
             </section>
           </TabsContent>
         </Tabs>
