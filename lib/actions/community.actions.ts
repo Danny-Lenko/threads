@@ -2,7 +2,7 @@
 
 import { FilterQuery, SortOrder } from "mongoose";
 
-import Community from "../models/community.model";
+import Community, { ICommunityDocument } from "../models/community.model";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
 
@@ -50,7 +50,9 @@ export async function createCommunity(
   }
 }
 
-export async function fetchCommunityDetails(id: string) {
+export async function fetchCommunityDetails(
+  id: string
+): Promise<ICommunityDocument> {
   try {
     connectToDB();
 
@@ -61,11 +63,15 @@ export async function fetchCommunityDetails(id: string) {
         model: User,
         select: "name username image _id id",
       },
+      {
+        path: "requests.user",
+        model: User,
+        select: "name username image _id id",
+      },
     ]);
 
-    return communityDetails;
+    return communityDetails ;
   } catch (error) {
-    // Handle any errors
     console.error("Error fetching community details:", error);
     throw error;
   }

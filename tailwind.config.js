@@ -51,6 +51,13 @@ module.exports = {
           fontWeight: "700",
         },
       ],
+      "heading3-semibold": [
+        "24px",
+        {
+          lineHeight: "140%",
+          fontWeight: "600",
+        },
+      ],
       "heading4-medium": [
         "20px",
         {
