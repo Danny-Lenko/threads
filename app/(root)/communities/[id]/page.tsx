@@ -12,8 +12,9 @@ import { MembershipDialog } from "@/components/communities/MembershipDialog";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import { MembershipBadge } from "@/components/communities/MembershipBadge";
-import MembershipRequestCard from "@/components/cards/MembershipRequestCard";
 import { User } from "@/lib/models/community.model";
+import RequestTab from "@/components/communities/RequestsTab";
+import { fetchRequestsByCommunityId } from "@/lib/actions/request/read.actions";
 
 async function Page({ params: { id } }: { params: { id: string } }) {
   const user = await currentUser();
@@ -21,12 +22,38 @@ async function Page({ params: { id } }: { params: { id: string } }) {
 
   const communityDetails = await fetchCommunityDetails(id);
   const members = communityDetails.members as User[];
+  const userIsMember = !!members.find((member) => member.id === user.id);
 
-  console.log("COMMUNITY:", communityDetails);
+  const requests = await fetchRequestsByCommunityId(communityDetails._id);
+  const userSentRequest = !!requests.find(
+    (request) => request.user.id === user.id
+  );
 
-  // let userIsNotMember;
+  console.log("REQUESTS:", requests);
 
-  const userIsNotMember = members?.find((member) => member.id !== user.id);
+  const membershipBadgeContent = userSentRequest ? (
+    <>
+      <Image
+        src="/assets/request.svg"
+        alt="logout"
+        width={16}
+        height={16}
+        className="min-w-[1rem] brightness-0 invert sm:-translate-x-2"
+      />
+      <span className="hidden sm:block">You requested membership</span>
+    </>
+  ) : (
+    <>
+      <Image
+        src="/assets/members.svg"
+        alt="logout"
+        width={16}
+        height={16}
+        className="min-w-[1rem] brightness-0 invert sm:-translate-x-2"
+      />
+      <span className="hidden sm:block">You&apos;re a member</span>
+    </>
+  );
 
   return (
     <section className="relative">
@@ -40,11 +67,11 @@ async function Page({ params: { id } }: { params: { id: string } }) {
         type="Community"
       />
 
-      {!!userIsNotMember && (
+      {!userIsMember && !userSentRequest && (
         <MembershipDialog communityId={communityDetails.id} userId={user.id} />
       )}
-      {!userIsNotMember && (
-        <MembershipBadge>You&apos;re a member</MembershipBadge>
+      {(userIsMember || userSentRequest) && (
+        <MembershipBadge>{membershipBadgeContent}</MembershipBadge>
       )}
 
       <div className="mt-9">
@@ -80,7 +107,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
           </TabsContent>
 
           <TabsContent value="members" className="mt-9 w-full text-light-1">
-            <section className="mt-9 flex flex-col gap-10">
+            <section className="section">
               {members.map((member) => (
                 <UserCard
                   key={member.id}
@@ -96,29 +123,12 @@ async function Page({ params: { id } }: { params: { id: string } }) {
 
           <TabsContent value="requests" className="w-full text-light-1">
             {/* @ts-ignore */}
-            <section className="mt-9 flex flex-col gap-7">
-              {userIsNotMember ? (
-                <h2 className="text-center text-heading3-semibold text-slate-500">
-                  This content is for members only
-                </h2>
-              ) : (
-                communityDetails.requests.map(({ user, introduction }) => {
-                  if (!("name" in user)) return null;
-
-                  return (
-                    <MembershipRequestCard
-                      key={user.id}
-                      id={user.id}
-                      name={user.name}
-                      username={user.username}
-                      imgUrl={user.image!}
-                      personType="User"
-                      orgId={communityDetails.id}
-                    />
-                  );
-                })
-              )}
-            </section>
+            <RequestTab
+              user={user}
+              requests={requests}
+              userIsMember={userIsMember}
+              orgId={communityDetails.id}
+            />
           </TabsContent>
         </Tabs>
       </div>

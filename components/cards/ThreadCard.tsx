@@ -47,7 +47,7 @@ function ThreadCard({
     <article
       className={`flex w-full flex-col rounded-xl ${
         isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
-      } ${isRepost && "-ml-3 mt-2 p-0 p-3 outline outline-1 outline-gray-700"}`}
+      } ${isRepost && "-ml-3 mt-2 p-3 outline outline-1 outline-gray-700"}`}
     >
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">

@@ -63,14 +63,14 @@ export async function fetchCommunityDetails(
         model: User,
         select: "name username image _id id",
       },
-      {
-        path: "requests.user",
-        model: User,
-        select: "name username image _id id",
-      },
+      // {
+      //   path: "requests.user",
+      //   model: User,
+      //   select: "name username image _id id",
+      // },
     ]);
 
-    return communityDetails ;
+    return communityDetails;
   } catch (error) {
     console.error("Error fetching community details:", error);
     throw error;

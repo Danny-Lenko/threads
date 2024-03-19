@@ -63,8 +63,17 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
     redirect("/");
   }
 
+  if (!threads.length)
+    return (
+      <section className="section">
+        <h2 className="text-center text-heading3-semibold text-slate-500">
+          No threads yet
+        </h2>
+      </section>
+    );
+
   return (
-    <section className="mt-9 flex flex-col gap-10">
+    <section className="section">
       {threads.map((thread) => (
         <ThreadCard
           key={thread._id}

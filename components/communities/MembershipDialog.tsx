@@ -2,6 +2,8 @@
 
 import { useReducer } from "react";
 
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,7 +15,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
-import { createRequest } from "@/lib/actions/community/update.actions";
+// import { createRequest } from "@/lib/actions/";
+import { createRequest } from "@/lib/actions/request/create.actions";
 import { usePathname } from "next/navigation";
 import { deleteAllRequests } from "@/lib/actions/community.actions";
 
@@ -63,10 +66,10 @@ export function MembershipDialog({ communityId, userId }: Props) {
   const handleClick = async () => {
     try {
       await createRequest({
-        communityId,
-        userId,
+        community: communityId,
+        user: userId,
         introduction: state.text,
-        pathname,
+        // pathname,
       });
       dispatch({ type: "SET_OPEN", payload: false });
     } catch (error) {
@@ -92,7 +95,16 @@ export function MembershipDialog({ communityId, userId }: Props) {
           asChild
           className="community-card_btn absolute right-0 top-1/2 h-auto w-min -translate-y-1/2"
         >
-          <Button>Request Membership</Button>
+          <Button>
+            <Image
+              src="/assets/share.svg"
+              alt="logout"
+              width={16}
+              height={16}
+              className="min-w-[1rem] brightness-0 invert sm:-translate-x-2"
+            />
+            <span className="hidden sm:block">Request Membership</span>
+          </Button>
         </DialogTrigger>
       </div>
       <DialogContent className="border-dark-5 bg-dark-2 text-light-1 sm:max-w-[425px]">

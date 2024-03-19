@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
+// import { IRequestDocument } from "./request.model";
 
 export interface User {
   _id: Types.ObjectId;
@@ -8,17 +9,17 @@ export interface User {
   image?: string;
 }
 
-interface Request {
-  user: Types.ObjectId | User;
-  introduction: string;
-}
+// export interface Request {
+//   user: Types.ObjectId | User;
+//   introduction: string;
+// }
 
 export interface ICommunityDocument extends Document {
   id: string;
   username: string;
   name: string;
   members: Types.ObjectId[] | User[];
-  requests: Request[];
+  // requests: Types.ObjectId[] | IRequestDocument[];
   image?: string;
   bio?: string;
   createdBy?: Types.ObjectId | User;
@@ -70,23 +71,31 @@ const communitySchema: Schema<ICommunityDocument> = new Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
   ],
 
-  requests: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-      },
-      introduction: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  // requests: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Request",
+  //     required: true,
+  //   },
+  // ],
+
+  // requests: [
+  //   {
+  //     user: {
+  //       type: mongoose.Schema.Types.ObjectId,
+  //       ref: "User",
+  //       required: true,
+  //     },
+  //     introduction: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //   },
+  // ],
 });
 
 const Community =
