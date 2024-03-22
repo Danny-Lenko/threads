@@ -7,22 +7,33 @@ import Request from "@/lib/models/request.model";
 import User from "@/lib/models/user.model";
 
 interface Params {
-  user: string;
-  community: string;
+  userId: string;
+  communityId: string;
   introduction: string;
-  // path: string;
 }
 
-export async function createRequest({ user, community, introduction }: Params) {
+export async function createRequest({
+  userId,
+  communityId,
+  introduction,
+}: Params) {
   try {
     connectToDB();
+    
+    const community = await Community.findOne({ id: communityId });
+    const user = await User.findOne({ id: userId });
 
-    const currentCommunity = await Community.findOne({ id: community });
-    const currentUser = await User.findOne({ id: user });
+    if (!community) {
+      throw new Error("Community not found");
+    }
+
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     await Request.create({
-      user,
-      community,
+      user: user._id,
+      community: community._id,
       introduction,
     });
   } catch (error: any) {

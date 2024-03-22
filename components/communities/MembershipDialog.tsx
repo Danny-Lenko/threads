@@ -15,7 +15,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
-// import { createRequest } from "@/lib/actions/";
 import { createRequest } from "@/lib/actions/request/create.actions";
 import { usePathname } from "next/navigation";
 import { deleteAllRequests } from "@/lib/actions/community.actions";
@@ -66,10 +65,9 @@ export function MembershipDialog({ communityId, userId }: Props) {
   const handleClick = async () => {
     try {
       await createRequest({
-        community: communityId,
-        user: userId,
+        communityId,
+        userId,
         introduction: state.text,
-        // pathname,
       });
       dispatch({ type: "SET_OPEN", payload: false });
     } catch (error) {
