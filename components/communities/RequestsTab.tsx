@@ -33,10 +33,12 @@ async function RequestTab({ user, requests, userIsMember, orgId }: Props) {
       {requests.map(({ user, introduction }) => {
         if (!("name" in user)) return null;
 
+        console.log("USER:", user);
+
         return (
           <RequestsListCard
             key={user.id}
-            id={user.id}
+            userId={user.id}
             name={user.name}
             username={user.username}
             imgUrl={user.image!}
