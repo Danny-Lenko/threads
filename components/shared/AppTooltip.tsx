@@ -4,26 +4,28 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TooltipProviderProps } from "@radix-ui/react-tooltip";
+import {
+  TooltipContentProps,
+  TooltipProviderProps,
+  TooltipTriggerProps,
+} from "@radix-ui/react-tooltip";
 
 type Props = {
   tooltipProviderProps?: Partial<TooltipProviderProps>;
+  tooltipTriggerProps?: Partial<TooltipTriggerProps>;
+  tooltipContentProps?: Partial<TooltipContentProps>;
 };
 
 export const AppTooltip = (props: Props) => {
   return (
     <TooltipProvider {...props.tooltipProviderProps}>
       <Tooltip>
-        <TooltipTrigger>
-          <p
-            className="user-card_btn !bg-red-600 py-2"
-            // disabled={organization.organization === null}
-          >
-            Reject
-          </p>
+        <TooltipTrigger {...props.tooltipTriggerProps}>
+          {props.tooltipTriggerProps?.children}
         </TooltipTrigger>
-        <TooltipContent>
-          <p>Hello World</p>
+        <TooltipContent {...props.tooltipContentProps}>
+          {/* <p>Hello World</p> */}
+          {props.tooltipContentProps?.children}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -29,11 +29,11 @@ function RequestsListCard({
 
   const organization = useOrganization();
 
-  console.log("ORGANIZATION:", organization);
-
   const currentMembership = organizationList?.find(
     (org) => org.organization.id === orgId
   );
+
+  const organizationMatches = organization.organization?.id === orgId;
 
   const role = currentMembership?.membership.role.toString();
 
@@ -59,27 +59,50 @@ function RequestsListCard({
           imgUrl={imgUrl}
           personType={personType}
         />
-        {role === "org:admin" && (
-          <>
-            {/* <Button
-              className="user-card_btn !bg-red-600"
-              disabled={organization.organization === null}
-            >
-              Reject
-            </Button> */}
 
+        {role === "org:admin" && !organizationMatches && (
+          <>
             <AppTooltip
               tooltipProviderProps={{
                 delayDuration: 200,
-                disableHoverableContent: !!organization.organization,
+              }}
+              tooltipTriggerProps={{
+                children: (
+                  <p className="user-card_btn cursor-default !bg-red-600 py-2 opacity-50">
+                    Reject
+                  </p>
+                ),
+              }}
+              tooltipContentProps={{
+                className: "bg-transparent !text-subtle-medium text-light1",
+                children: <p>Login with the organization account</p>,
               }}
             />
+            <AppTooltip
+              tooltipProviderProps={{
+                delayDuration: 200,
+              }}
+              tooltipTriggerProps={{
+                children: (
+                  <p className="user-card_btn cursor-default !bg-emerald-600 py-2 opacity-50">
+                    Accept
+                  </p>
+                ),
+              }}
+              tooltipContentProps={{
+                className: "bg-transparent !text-subtle-medium text-light1",
+                children: <p>Login with the organization account</p>,
+              }}
+            />
+          </>
+        )}
 
+        {role === "org:admin" && organizationMatches && (
+          <>
+            <Button className="user-card_btn !bg-red-600">Reject</Button>
             <Button
               className="user-card_btn !bg-emerald-600"
               onClick={handleAccept}
-              disabled={organization.organization === null}
-              title="Hello World!"
             >
               Accept
             </Button>
