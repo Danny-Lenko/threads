@@ -9,7 +9,7 @@ interface Props {
   userIsMember: boolean;
 }
 
-async function RequestTab({ user, requests, userIsMember, orgId }: Props) {
+async function RequestTab({ requests, userIsMember, orgId }: Props) {
   if (!userIsMember)
     return (
       <section className="section">

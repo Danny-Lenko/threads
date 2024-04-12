@@ -68,6 +68,7 @@ export function MembershipDialog({ communityId, userId }: Props) {
         communityId,
         userId,
         introduction: state.text,
+        pathname
       });
       dispatch({ type: "SET_OPEN", payload: false });
     } catch (error) {

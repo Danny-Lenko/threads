@@ -29,7 +29,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
     (request) => request.user.id === user.id
   );
 
-  // console.log("USER:", user);
+  console.log("REQUESTS:", requests);
 
   const membershipBadgeContent = userSentRequest ? (
     <>
