@@ -5,8 +5,12 @@ import { Button } from "../ui/button";
 import UserCard from "./UserCard";
 
 import { AppTooltip } from "../shared/AppTooltip";
+import { acceptRequest } from "@/lib/actions/request/update.actions";
+import { usePathname } from "next/navigation";
+import { AppConfirm } from "../shared/AppConfirm";
 
 interface Props {
+  requestId: string;
   userId: string;
   name: string;
   username: string;
@@ -17,6 +21,7 @@ interface Props {
 }
 
 function RequestsListCard({
+  requestId,
   userId,
   name,
   username,
@@ -26,6 +31,7 @@ function RequestsListCard({
   introduction,
 }: Props) {
   const { organizationList } = useOrganizationList();
+  const pathname = usePathname();
 
   const organization = useOrganization();
 
@@ -38,11 +44,15 @@ function RequestsListCard({
   const role = currentMembership?.membership.role.toString();
 
   const handleAccept = async () => {
+    console.log("ACCEPTING:", userId);
+
     try {
       const membership = await organization.organization?.addMember({
         userId,
         role: "org:member",
       });
+
+      await acceptRequest({ requestId, pathname });
       console.log("New member added:", membership);
     } catch (error) {
       console.error("Error adding member:", error);
@@ -100,12 +110,18 @@ function RequestsListCard({
         {role === "org:admin" && organizationMatches && (
           <>
             <Button className="user-card_btn !bg-red-600">Reject</Button>
-            <Button
-              className="user-card_btn !bg-emerald-600"
-              onClick={handleAccept}
-            >
-              Accept
-            </Button>
+            <AppConfirm
+              triggerProps={{
+                children: (
+                  <Button
+                    className="user-card_btn !bg-emerald-600"
+                    // onClick={handleAccept}
+                  >
+                    Accept
+                  </Button>
+                ),
+              }}
+            />
           </>
         )}
       </div>

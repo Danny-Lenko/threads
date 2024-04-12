@@ -14,7 +14,7 @@ import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import { MembershipBadge } from "@/components/communities/MembershipBadge";
 import { User } from "@/lib/models/community.model";
 import RequestTab from "@/components/communities/RequestsTab";
-import { fetchRequestsByCommunityId } from "@/lib/actions/request/read.actions";
+import { fetchPendingRequestsByCommunityId } from "@/lib/actions/request/read.actions";
 
 async function Page({ params: { id } }: { params: { id: string } }) {
   const user = await currentUser();
@@ -24,7 +24,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
   const members = communityDetails.members as User[];
   const userIsMember = !!members.find((member) => member.id === user.id);
 
-  const requests = await fetchRequestsByCommunityId(communityDetails._id);
+  const requests = await fetchPendingRequestsByCommunityId(communityDetails._id);
   const userSentRequest = !!requests.find(
     (request) => request.user.id === user.id
   );

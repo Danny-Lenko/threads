@@ -30,13 +30,12 @@ async function RequestTab({ requests, userIsMember, orgId }: Props) {
 
   return (
     <section className="section gap-7">
-      {requests.map(({ user, introduction }) => {
+      {requests.map(({ user, introduction, id }) => {
         if (!("name" in user)) return null;
-
-        console.log("USER:", user);
 
         return (
           <RequestsListCard
+            requestId={id}
             key={user.id}
             userId={user.id}
             name={user.name}

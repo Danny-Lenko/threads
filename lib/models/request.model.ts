@@ -1,5 +1,7 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
+type RequestStatus = "pending" | "accepted" | "reverted";
+
 export interface User {
   _id: Types.ObjectId;
   id: string;
@@ -12,7 +14,8 @@ export interface IRequestDocument extends Document {
   user: Types.ObjectId | User;
   community: Types.ObjectId;
   introduction: string;
-  rejection: string;
+  status: RequestStatus;
+  reversionMessage?: string;
 }
 
 const requestSchema: Schema<IRequestDocument> = new Schema({
@@ -30,7 +33,12 @@ const requestSchema: Schema<IRequestDocument> = new Schema({
     type: String,
     required: true,
   },
-  rejection: {
+  status: {
+    type: String,
+    required: true,
+    default: "pending",
+  },
+  reversionMessage: {
     type: String,
     default: undefined,
   },
