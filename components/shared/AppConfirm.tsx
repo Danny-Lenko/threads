@@ -9,12 +9,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertDialogTriggerProps } from "@radix-ui/react-alert-dialog";
+import {
+  AlertDialogCancelProps,
+  AlertDialogDescriptionProps,
+  AlertDialogTitleProps,
+  AlertDialogTriggerProps,
+} from "@radix-ui/react-alert-dialog";
 
 type Props = {
-  //   tooltipProviderProps?: Partial<TooltipProviderProps>;
   triggerProps?: Partial<AlertDialogTriggerProps>;
-  //   tooltipContentProps?: Partial<TooltipContentProps>;
+  titleProps?: Partial<AlertDialogTitleProps>;
+  descriptionProps?: Partial<AlertDialogDescriptionProps>;
+  cancelProps?: Partial<AlertDialogCancelProps>;
+  continueProps?: Partial<AlertDialogCancelProps>;
 };
 
 export const AppConfirm = (props: Props) => {
@@ -25,15 +32,16 @@ export const AppConfirm = (props: Props) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>{props.titleProps?.children}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            {props.descriptionProps?.children}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogCancel {...props.cancelProps}>Cancel</AlertDialogCancel>
+          <AlertDialogAction {...props.continueProps}>
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

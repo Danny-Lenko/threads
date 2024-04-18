@@ -113,14 +113,17 @@ function RequestsListCard({
             <AppConfirm
               triggerProps={{
                 children: (
-                  <Button
-                    className="user-card_btn !bg-emerald-600"
-                    // onClick={handleAccept}
-                  >
+                  <div className="user-card_btn !bg-emerald-600 p-2">
                     Accept
-                  </Button>
+                  </div>
                 ),
               }}
+              titleProps={{ children: "Are you sure?" }}
+              descriptionProps={{
+                children: `User @${username} will be added to the '${currentMembership?.organization.name}' community and granted a 'member' role.`,
+              }}
+              // cancelProps={{onClick: () => console.log('CANCEL!')}}
+              continueProps={{ onClick: () => handleAccept() }}
             />
           </>
         )}
