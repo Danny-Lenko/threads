@@ -1,10 +1,13 @@
 "use client";
 
 import { useReducer } from "react";
+// import { experimental_useFormStatus } from "react-dom";
+// import { useFormStatus } from "react-dom";
 
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import { AppSubmitButton } from "../shared/AppSubmitButton";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +20,6 @@ import {
 import { Textarea } from "../ui/textarea";
 import { createRequest } from "@/lib/actions/request/create.actions";
 import { usePathname } from "next/navigation";
-import { deleteAllRequests } from "@/lib/actions/community.actions";
 
 interface Props {
   communityId: string;
@@ -62,30 +64,31 @@ export function MembershipDialog({ communityId, userId }: Props) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleClick = async () => {
-    try {
-      await createRequest({
-        communityId,
-        userId,
-        introduction: state.text,
-        pathname
-      });
-      dispatch({ type: "SET_OPEN", payload: false });
-    } catch (error) {
-      console.log("ERROR:", error);
-    }
-  };
+  const createRequestOnSubmit = createRequest.bind(null, {
+    communityId,
+    userId,
+    pathname,
+  });
 
-  const handleClear = async () => {
-    await deleteAllRequests({
-      communityId,
-      pathname,
-    });
-  };
+  // const handleClick = async () => {
+  //   try {
+  //     await createRequest({
+  //       communityId,
+  //       userId,
+  //       introduction: state.text,
+  //       pathname,
+  //     });
+  //     dispatch({ type: "SET_OPEN", payload: false });
+  //   } catch (error) {
+  //     console.log("ERROR:", error);
+  //   }
+  // };
 
   const setOpen = (open: boolean) => {
     dispatch({ type: "SET_OPEN", payload: open });
   };
+
+  // const update = () => console.log("updated");
 
   return (
     <Dialog open={state.open} onOpenChange={(open) => setOpen(open)}>
@@ -108,32 +111,41 @@ export function MembershipDialog({ communityId, userId }: Props) {
       </div>
       <DialogContent className="border-dark-5 bg-dark-2 text-light-1 sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Introduce yourself</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-body-medium">
+            Introduce yourself
+          </DialogTitle>
+          <DialogDescription className="text-small-regular">
             Click send when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid w-full gap-1.5">
-            <Textarea
-              placeholder="Type your message here."
-              id="message-2"
-              className="border-dark-5"
-              onChange={(e) => {
-                dispatch({ type: "SET_TEXT", payload: e.target.value });
-              }}
-            />
-            <p className="text-subtle-medium text-dark-5">
-              30/<span className="text-small-regular">{state.count}</span>/300
-            </p>
+        <form action={createRequestOnSubmit}>
+          <div className="grid gap-4 py-4">
+            <div className="grid w-full gap-1.5">
+              <Textarea
+                required
+                minLength={30}
+                maxLength={300}
+                placeholder="Type your message here."
+                id="message-2"
+                className="border-dark-5"
+                onChange={(e) => {
+                  dispatch({ type: "SET_TEXT", payload: e.target.value });
+                }}
+                name="message-2"
+              />
+              <p className="text-subtle-medium text-dark-5">
+                30/<span className="text-small-regular">{state.count}</span>/300
+              </p>
+            </div>
           </div>
-        </div>
-        <DialogFooter>
-          <Button onClick={handleClear}>Clear All</Button>
-          <Button className="border border-dark-5" onClick={handleClick}>
-            Send
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <AppSubmitButton
+            // className="border border-dark-5" onClick={handleClick}
+            >
+              Send
+            </AppSubmitButton>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
