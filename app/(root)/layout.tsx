@@ -10,6 +10,7 @@ import Bottombar from "@/components/shared/Bottombar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Toaster } from "../../components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,6 +50,7 @@ export default function RootLayout({
             </main>
 
             <Bottombar />
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

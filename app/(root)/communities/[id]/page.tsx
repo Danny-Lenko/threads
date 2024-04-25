@@ -1,20 +1,17 @@
 import Image from "next/image";
 import { currentUser } from "@clerk/nextjs";
 
-import { communityTabs } from "@/constants";
-
 import UserCard from "@/components/cards/UserCard";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import { MembershipDialog } from "@/components/communities/MembershipDialog";
-
-import { fetchCommunityDetails } from "@/lib/actions/community.actions";
-import { MembershipBadge } from "@/components/communities/MembershipBadge";
-import { User } from "@/lib/models/community.model";
 import RequestTab from "@/components/communities/RequestsTab";
+
+import { communityTabs } from "@/constants";
+import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import { fetchPendingRequestsByCommunityId } from "@/lib/actions/request/read.actions";
+import { User } from "@/lib/models/community.model";
+import { MembershipStatus } from "@/components/communities/MembershipStatus";
 
 async function Page({ params: { id } }: { params: { id: string } }) {
   const user = await currentUser();
@@ -24,35 +21,11 @@ async function Page({ params: { id } }: { params: { id: string } }) {
   const members = communityDetails.members as User[];
   const userIsMember = !!members.find((member) => member.id === user.id);
 
-  const requests = await fetchPendingRequestsByCommunityId(communityDetails._id);
-  const userSentRequest = !!requests.find(
-    (request) => request.user.id === user.id
+  const requests = await fetchPendingRequestsByCommunityId(
+    communityDetails._id
   );
-
-  console.log("REQUESTS:", requests);
-
-  const membershipBadgeContent = userSentRequest ? (
-    <>
-      <Image
-        src="/assets/request.svg"
-        alt="logout"
-        width={16}
-        height={16}
-        className="min-w-[1rem] brightness-0 invert sm:-translate-x-2"
-      />
-      <span className="hidden sm:block">You requested membership</span>
-    </>
-  ) : (
-    <>
-      <Image
-        src="/assets/members.svg"
-        alt="logout"
-        width={16}
-        height={16}
-        className="min-w-[1rem] brightness-0 invert sm:-translate-x-2"
-      />
-      <span className="hidden sm:block">You&apos;re a member</span>
-    </>
+  const userHasSentRequest = !!requests.find(
+    (request) => request.user.id === user.id
   );
 
   return (
@@ -67,12 +40,11 @@ async function Page({ params: { id } }: { params: { id: string } }) {
         type="Community"
       />
 
-      {!userIsMember && !userSentRequest && (
-        <MembershipDialog communityId={communityDetails.id} userId={user.id} />
-      )}
-      {(userIsMember || userSentRequest) && (
-        <MembershipBadge>{membershipBadgeContent}</MembershipBadge>
-      )}
+      <MembershipStatus
+        communityDetails={communityDetails}
+        user={user}
+        userHasSentRequest={userHasSentRequest}
+      />
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">
