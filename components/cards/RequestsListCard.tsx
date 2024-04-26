@@ -122,8 +122,7 @@ function RequestsListCard({
               descriptionProps={{
                 children: `User @${username} will be added to the '${currentMembership?.organization.name}' community and granted a 'member' role.`,
               }}
-              // cancelProps={{onClick: () => console.log('CANCEL!')}}
-              continueProps={{ onClick: () => handleAccept() }}
+              formProps={{ action: () => handleAccept() }}
             />
           </>
         )}

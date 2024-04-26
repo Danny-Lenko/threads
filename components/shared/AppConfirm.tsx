@@ -1,6 +1,6 @@
 import {
   AlertDialog,
-  AlertDialogAction,
+  // AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -15,11 +15,14 @@ import {
   AlertDialogTitleProps,
   AlertDialogTriggerProps,
 } from "@radix-ui/react-alert-dialog";
+import { AppSubmitButton } from "./AppSubmitButton";
+import { HTMLProps } from "react";
 
 type Props = {
   triggerProps?: Partial<AlertDialogTriggerProps>;
   titleProps?: Partial<AlertDialogTitleProps>;
   descriptionProps?: Partial<AlertDialogDescriptionProps>;
+  formProps?: Partial<HTMLProps<HTMLFormElement>>;
   cancelProps?: Partial<AlertDialogCancelProps>;
   continueProps?: Partial<AlertDialogCancelProps>;
 };
@@ -37,25 +40,13 @@ export const AppConfirm = (props: Props) => {
             {props.descriptionProps?.children}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel {...props.cancelProps}>Cancel</AlertDialogCancel>
-          <AlertDialogAction {...props.continueProps}>
-            Continue
-          </AlertDialogAction>
-        </AlertDialogFooter>
+        <form {...props.formProps}>
+          <AlertDialogFooter>
+            <AlertDialogCancel {...props.cancelProps}>Cancel</AlertDialogCancel>
+            <AppSubmitButton {...props.continueProps}>Continue</AppSubmitButton>
+          </AlertDialogFooter>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   );
 };
-
-//   <TooltipProvider {...props.tooltipProviderProps}>
-//     <Tooltip>
-//       <TooltipTrigger {...props.tooltipTriggerProps}>
-//         {props.tooltipTriggerProps?.children}
-//       </TooltipTrigger>
-//       <TooltipContent {...props.tooltipContentProps}>
-//         {/* <p>Hello World</p> */}
-//         {props.tooltipContentProps?.children}
-//       </TooltipContent>
-//     </Tooltip>
-//   </TooltipProvider>

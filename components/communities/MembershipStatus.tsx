@@ -1,7 +1,8 @@
 import Image from "next/image";
-
-import { ICommunityDocument } from "@/lib/models/community.model";
 import { User } from "@clerk/nextjs/dist/types/server";
+
+import { createRequest } from "@/lib/actions/request/create.actions";
+import { ICommunityDocument } from "@/lib/models/community.model";
 import { MembershipBadge } from "./MembershipBadge";
 import { MembershipDialog } from "./MembershipDialog";
 import { FormProvider } from "./FormProvider";
@@ -29,7 +30,7 @@ export function MembershipStatus({
       />
       <span className="hidden sm:block">You requested membership</span>
     </>
-  ) : (
+  ) : (  
     <>
       <Image
         src="/assets/members.svg"
@@ -44,7 +45,7 @@ export function MembershipStatus({
 
   return (
     <>
-      <FormProvider>
+      <FormProvider action={createRequest}>
         {!userIsMember && !userHasSentRequest && (
           <MembershipDialog communityId={communityDetails.id} userId={user.id}>
             <span className="hidden sm:block">Request Membership</span>
