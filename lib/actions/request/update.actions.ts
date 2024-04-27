@@ -22,9 +22,13 @@ export async function acceptRequest({ requestId, pathname }: Params) {
     );
 
     if (!request) {
-      throw new Error("Request not found");
+      // throw new Error("Request not found");
+      return {
+        errors: { databaseError: "Request does not exist" },
+      };
     }
     revalidatePath(pathname);
+    return { message: "User added successfully" };
   } catch (error: any) {
     throw new Error(`Failed to update request: ${error.message}`);
   }

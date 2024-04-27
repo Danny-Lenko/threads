@@ -33,7 +33,7 @@ const schema = z.object({
 export async function createRequest(
   prevState: {
     message?: string;
-    errors?: { [key: string]: string[] | undefined };
+    errors?: { [key: string]: string | undefined };
   },
   formData: FormData
 ) {

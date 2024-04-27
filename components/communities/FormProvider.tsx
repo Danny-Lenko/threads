@@ -2,7 +2,6 @@
 
 import { createContext, ReactNode, useEffect } from "react";
 
-// import { createRequest } from "@/lib/actions/request/create.actions";
 import { useFormState } from "react-dom";
 import { useToast } from "../ui/use-toast";
 
@@ -13,7 +12,7 @@ const formInitialState = {
 
 interface ErrorsType {
   errors?: {
-    [key: string]: string[] | undefined;
+    [key: string]: string | undefined;
   };
 }
 
@@ -21,11 +20,14 @@ interface SuccessType {
   message?: string;
 }
 
-type ReturnType = ErrorsType | SuccessType;
+export type FormStateType = ErrorsType | SuccessType;
 
 interface Props {
   children: ReactNode;
-  action: (prevState: ReturnType, formData: FormData) => Promise<ReturnType>;
+  action: (
+    prevState: FormStateType,
+    formData: FormData
+  ) => Promise<FormStateType>;
 }
 
 export const FormContext = createContext<(payload: FormData) => void>(() => {});
@@ -33,10 +35,13 @@ export const FormContext = createContext<(payload: FormData) => void>(() => {});
 export function FormProvider({ children, action }: Props) {
   const { toast } = useToast();
 
+  console.log("ACTION:", action);
+
   const [formState, formAction] = useFormState(action, formInitialState);
 
+  console.log("FORMSTATE:", formState);
+
   useEffect(() => {
-    // if (formState.errors) {
     if ("errors" in formState && formState.errors) {
       const [firstError] = Object.values(formState.errors)
         .flat()
@@ -48,8 +53,7 @@ export function FormProvider({ children, action }: Props) {
       });
     }
 
-    // if (formState.message) {
-    if ("message" in formState) {
+    if ("message" in formState && formState.message) {
       toast({
         title: "Success!",
         description: formState.message,

@@ -1,6 +1,5 @@
 import {
   AlertDialog,
-  // AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -28,6 +27,8 @@ type Props = {
 };
 
 export const AppConfirm = (props: Props) => {
+  console.log("formAction:", props.formProps?.action);
+
   return (
     <AlertDialog>
       <AlertDialogTrigger {...props.triggerProps}>
@@ -40,7 +41,7 @@ export const AppConfirm = (props: Props) => {
             {props.descriptionProps?.children}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <form {...props.formProps}>
+        <form {...props.formProps} action={props.formProps?.action}>
           <AlertDialogFooter>
             <AlertDialogCancel {...props.cancelProps}>Cancel</AlertDialogCancel>
             <AppSubmitButton {...props.continueProps}>Continue</AppSubmitButton>

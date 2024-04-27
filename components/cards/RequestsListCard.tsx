@@ -1,13 +1,16 @@
 "use client";
 
 import { useOrganizationList, useOrganization } from "@clerk/nextjs";
-import { Button } from "../ui/button";
+// import { Button } from "../ui/button";
 import UserCard from "./UserCard";
 
-import { AppTooltip } from "../shared/AppTooltip";
+// import { AppTooltip } from "../shared/AppTooltip";
 import { acceptRequest } from "@/lib/actions/request/update.actions";
 import { usePathname } from "next/navigation";
-import { AppConfirm } from "../shared/AppConfirm";
+// import { AppConfirm } from "../shared/AppConfirm";
+import { ReactElement } from "react";
+import { FormProvider, FormStateType } from "../communities/FormProvider";
+import AdminButtons from "../communities/AdminButtons";
 
 interface Props {
   requestId: string;
@@ -18,6 +21,7 @@ interface Props {
   personType: string;
   orgId: string;
   introduction: string;
+  children: ReactElement;
 }
 
 function RequestsListCard({
@@ -29,35 +33,49 @@ function RequestsListCard({
   personType,
   orgId,
   introduction,
+  children,
 }: Props) {
-  const { organizationList } = useOrganizationList();
   const pathname = usePathname();
 
+  const { organizationList } = useOrganizationList();
   const organization = useOrganization();
-
   const currentMembership = organizationList?.find(
     (org) => org.organization.id === orgId
   );
-
   const organizationMatches = organization.organization?.id === orgId;
-
   const role = currentMembership?.membership.role.toString();
 
-  const handleAccept = async () => {
+  console.log("ORGANIZATIONMATCHES:", organizationMatches);
+
+  const handleAccept = async (prevState: FormStateType, formData: FormData) => {
     console.log("ACCEPTING:", userId);
 
-    try {
-      const membership = await organization.organization?.addMember({
-        userId,
-        role: "org:member",
-      });
+    // try {
+    const membership = await organization.organization?.addMember({
+      userId,
+      role: "org:member",
+    });
 
-      await acceptRequest({ requestId, pathname });
-      console.log("New member added:", membership);
-    } catch (error) {
-      console.error("Error adding member:", error);
-    }
+    if (!membership)
+      return {
+        errors: { databaseError: "Clerk request returned with an error" },
+      };
+
+    console.log("New member added:", membership);
+
+    // return await acceptRequest({ requestId, pathname });
+
+    const message = await acceptRequest({ requestId, pathname });
+
+    console.log("MESSAGE:", message);
+
+    return message;
+    // } catch (error) {
+    //   console.error("Error adding member:", error);
+    // }
   };
+
+  // console.log("USERNAME", username);
 
   return (
     <div>
@@ -70,61 +88,16 @@ function RequestsListCard({
           personType={personType}
         />
 
-        {role === "org:admin" && !organizationMatches && (
-          <>
-            <AppTooltip
-              tooltipProviderProps={{
-                delayDuration: 200,
-              }}
-              tooltipTriggerProps={{
-                children: (
-                  <p className="user-card_btn cursor-default !bg-red-600 py-2 opacity-50">
-                    Reject
-                  </p>
-                ),
-              }}
-              tooltipContentProps={{
-                className: "bg-transparent !text-subtle-medium text-light1",
-                children: <p>Login with the organization account</p>,
-              }}
-            />
-            <AppTooltip
-              tooltipProviderProps={{
-                delayDuration: 200,
-              }}
-              tooltipTriggerProps={{
-                children: (
-                  <p className="user-card_btn cursor-default !bg-emerald-600 py-2 opacity-50">
-                    Accept
-                  </p>
-                ),
-              }}
-              tooltipContentProps={{
-                className: "bg-transparent !text-subtle-medium text-light1",
-                children: <p>Login with the organization account</p>,
-              }}
-            />
-          </>
-        )}
+        {/* Passing as children to keep it ssr */}
+        {role === "org:admin" && !organizationMatches && children}
 
         {role === "org:admin" && organizationMatches && (
-          <>
-            <Button className="user-card_btn !bg-red-600">Reject</Button>
-            <AppConfirm
-              triggerProps={{
-                children: (
-                  <div className="user-card_btn !bg-emerald-600 p-2">
-                    Accept
-                  </div>
-                ),
-              }}
-              titleProps={{ children: "Are you sure?" }}
-              descriptionProps={{
-                children: `User @${username} will be added to the '${currentMembership?.organization.name}' community and granted a 'member' role.`,
-              }}
-              formProps={{ action: () => handleAccept() }}
+          <FormProvider action={handleAccept}>
+            <AdminButtons
+              username={username}
+              orgname={currentMembership?.organization.name}
             />
-          </>
+          </FormProvider>
         )}
       </div>
       <p className="ml-[60px]">{introduction}</p>

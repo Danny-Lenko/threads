@@ -16,8 +16,14 @@ export function MembershipStatus({
   user: User;
   userHasSentRequest: boolean;
 }) {
+  // const members = communityDetails.members as unknown as User[];
+  // const userIsMember = !!members.find((member) => member.id === user.id);
+
   const members = communityDetails.members;
-  const userIsMember = !!members.find((member) => member.id === user.id);
+  const userIsMember = members.some(
+    (member) =>
+      typeof member === "object" && "_id" in member && member.id === user.id
+  );
 
   const membershipBadgeContent = userHasSentRequest ? (
     <>
@@ -30,7 +36,7 @@ export function MembershipStatus({
       />
       <span className="hidden sm:block">You requested membership</span>
     </>
-  ) : (  
+  ) : (
     <>
       <Image
         src="/assets/members.svg"
