@@ -129,8 +129,6 @@ export async function fetchUsers({
 }
 
 export async function fetchUserReposts(userId: string): Promise<any> {
-  console.log("I AM FIRING");
-
   try {
     connectToDB();
 

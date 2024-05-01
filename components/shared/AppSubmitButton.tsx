@@ -13,8 +13,6 @@ export function AppSubmitButton({
 }) {
   const { pending } = useFormStatus();
 
-  console.log("PENDING:", pending);
-
   return (
     <Button type="submit" disabled={pending} {...props}>
       {pending ? <Loader2 className="animate-spin" /> : children}
