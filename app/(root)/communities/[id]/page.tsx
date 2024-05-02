@@ -30,23 +30,23 @@ async function Page({ params: { id } }: { params: { id: string } }) {
     (request) => request.user.id === user.id
   );
 
+  const profileHeaderChildren = (
+    <MembershipStatus
+      communityDetails={communityDetails}
+      user={user}
+      userHasSentRequest={userHasSentRequest}
+    />
+  );
+
   return (
     <section className="relative">
       <ProfileHeader
-        accountId={communityDetails.createdBy?.id as string}
         authUserId={user.id}
-        name={communityDetails.name}
-        username={communityDetails.username}
-        imgUrl={communityDetails.image!}
-        bio={communityDetails.bio!}
-        type="Community"
-      />
-
-      <MembershipStatus
         communityDetails={communityDetails}
-        user={user}
-        userHasSentRequest={userHasSentRequest}
-      />
+        type="Community"
+      >
+        {profileHeaderChildren}
+      </ProfileHeader>
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">

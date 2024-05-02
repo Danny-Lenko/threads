@@ -9,6 +9,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
+  AlertDialogActionProps,
   AlertDialogCancelProps,
   AlertDialogDescriptionProps,
   AlertDialogTitleProps,
@@ -23,10 +24,12 @@ type Props = {
   descriptionProps?: Partial<AlertDialogDescriptionProps>;
   formProps?: Partial<HTMLProps<HTMLFormElement>>;
   cancelProps?: Partial<AlertDialogCancelProps>;
-  continueProps?: Partial<AlertDialogCancelProps>;
+  
+  // not tested well: have changed from AlertDialogCancelProps to AlertDialogActionProps
+  continueProps?: Partial<AlertDialogActionProps>;
 };
 
-export const AppConfirm = (props: Props) => {
+export const AppDialogConfirm = (props: Props) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger {...props.triggerProps}>

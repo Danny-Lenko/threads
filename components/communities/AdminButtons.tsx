@@ -3,7 +3,7 @@
 import { useContext } from "react";
 import { FormContext } from "./FormProvider";
 import { Button } from "../ui/button";
-import { AppConfirm } from "../shared/AppConfirm";
+import { AppDialogConfirm } from "../shared/AppDialogConfirm";
 import { usePathname } from "next/navigation";
 
 interface Props {
@@ -21,7 +21,7 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
   const hiddenInputDataProviders = (
     <>
       {/* Hidden input components to pass necessary arguments as submitting form data */}
-      <input hidden name="userId" defaultValue={userId} />
+      <input hidden name="userId" defaultValue={userId} />  
       <input hidden name="communityId" defaultValue={orgId} />
       <input hidden name="requestId" defaultValue={requestId} />
       <input hidden name="pathname" defaultValue={pathname} />
@@ -31,7 +31,7 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
   return (
     <>
       <Button className="user-card_btn !bg-red-600">Reject</Button>
-      <AppConfirm
+      <AppDialogConfirm
         triggerProps={{
           children: (
             <div className="user-card_btn !bg-emerald-600 p-2">Accept</div>

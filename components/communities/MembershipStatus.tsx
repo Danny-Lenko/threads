@@ -16,9 +16,6 @@ export function MembershipStatus({
   user: User;
   userHasSentRequest: boolean;
 }) {
-  // const members = communityDetails.members as unknown as User[];
-  // const userIsMember = !!members.find((member) => member.id === user.id);
-
   const members = communityDetails.members;
   const userIsMember = members.some(
     (member) =>
@@ -53,9 +50,10 @@ export function MembershipStatus({
     <>
       <FormProvider action={createRequest}>
         {!userIsMember && !userHasSentRequest && (
-          <MembershipDialog communityId={communityDetails.id} userId={user.id}>
-            <span className="hidden sm:block">Request Membership</span>
-          </MembershipDialog>
+          <MembershipDialog
+            communityId={communityDetails.id}
+            userId={user.id}
+          />
         )}
       </FormProvider>
       {(userIsMember || userHasSentRequest) && (
