@@ -13,7 +13,7 @@ import { fetchPendingRequestsByCommunityId } from "@/lib/actions/request/read.ac
 import { User } from "@/lib/models/community.model";
 import { MembershipStatus } from "@/components/communities/MembershipStatus";
 import { FormProvider } from "@/components/communities/FormProvider";
-import { acceptRequest } from "@/lib/actions/request/update.actions";
+import { acceptOrRejectRequest } from "@/lib/actions/request/update.actions";
 
 async function Page({ params: { id } }: { params: { id: string } }) {
   const user = await currentUser();
@@ -96,7 +96,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
           </TabsContent>
 
           <TabsContent value="requests" className="w-full text-light-1">
-            <FormProvider action={acceptRequest}>
+            <FormProvider action={acceptOrRejectRequest}>
               {/* @ts-ignore */}
               <RequestTab
                 user={user}

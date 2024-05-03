@@ -2,9 +2,10 @@
 
 import { useContext } from "react";
 import { FormContext } from "./FormProvider";
-import { Button } from "../ui/button";
+// import { Button } from "../ui/button";
 import { AppDialogConfirm } from "../shared/AppDialogConfirm";
 import { usePathname } from "next/navigation";
+import { RejectRequestDialog } from "./RejectRequestDialog";
 
 interface Props {
   userId: string;
@@ -20,17 +21,30 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
 
   const hiddenInputDataProviders = (
     <>
-      {/* Hidden input components to pass necessary arguments as submitting form data */}
-      <input hidden name="userId" defaultValue={userId} />  
+      <input hidden name="userId" defaultValue={userId} />
       <input hidden name="communityId" defaultValue={orgId} />
       <input hidden name="requestId" defaultValue={requestId} />
       <input hidden name="pathname" defaultValue={pathname} />
     </>
   );
 
+  const rejectHiddenProviders = (
+    <>
+      <input hidden name="type" defaultValue="reject" />
+      {hiddenInputDataProviders}
+    </>
+  );
+
   return (
     <>
-      <Button className="user-card_btn !bg-red-600">Reject</Button>
+      {/* Reject button dialog */}
+      <RejectRequestDialog
+        // communityId={orgId}
+        // userId={userId}
+        hiddenFormProviders={rejectHiddenProviders}
+        action={formAction}
+      />
+      {/* Accept button dialog */}
       <AppDialogConfirm
         triggerProps={{
           children: (
