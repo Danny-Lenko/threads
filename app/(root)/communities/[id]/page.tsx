@@ -1,18 +1,17 @@
 import Image from "next/image";
 import { currentUser } from "@clerk/nextjs";
 
+import { communityTabs } from "@/constants";
 import UserCard from "@/components/cards/UserCard";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RequestTab from "@/components/communities/RequestsTab";
-
-import { communityTabs } from "@/constants";
+import { FormProvider } from "@/components/communities/FormProvider";
+import RequestsTab from "@/components/communities/RequestsTab";
+import { MembershipStatus } from "@/components/communities/MembershipStatus";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import { fetchPendingRequestsByCommunityId } from "@/lib/actions/request/read.actions";
 import { User } from "@/lib/models/community.model";
-import { MembershipStatus } from "@/components/communities/MembershipStatus";
-import { FormProvider } from "@/components/communities/FormProvider";
 import { acceptOrRejectRequest } from "@/lib/actions/request/update.actions";
 
 async function Page({ params: { id } }: { params: { id: string } }) {
@@ -41,9 +40,10 @@ async function Page({ params: { id } }: { params: { id: string } }) {
   return (
     <section className="relative">
       <ProfileHeader
-        authUserId={user.id}
-        communityDetails={communityDetails}
-        type="Community"
+        image={communityDetails.image}
+        name={communityDetails.name}
+        username={communityDetails.username}
+        bio={communityDetails.bio}
       >
         {profileHeaderChildren}
       </ProfileHeader>
@@ -98,7 +98,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
           <TabsContent value="requests" className="w-full text-light-1">
             <FormProvider action={acceptOrRejectRequest}>
               {/* @ts-ignore */}
-              <RequestTab
+              <RequestsTab
                 user={user}
                 requests={requests}
                 userIsMember={userIsMember}

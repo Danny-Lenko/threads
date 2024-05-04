@@ -1,11 +1,14 @@
 "use client";
 
 import { useContext } from "react";
+import { usePathname } from "next/navigation";
+import { EllipsisVertical } from "lucide-react";
+
 import { FormContext } from "./FormProvider";
 // import { Button } from "../ui/button";
 import { AppDialogConfirm } from "../shared/AppDialogConfirm";
-import { usePathname } from "next/navigation";
 import { RejectRequestDialog } from "./RejectRequestDialog";
+import { AppDropdownMenu } from "../shared/AppDropdownMenu";
 
 interface Props {
   userId: string;
@@ -36,8 +39,15 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
   );
 
   return (
-    <>
-      {/* Reject button dialog */}
+    <AppDropdownMenu
+      contentProps={{ side: "left" }}
+      triggerProps={{
+        children: (
+          <EllipsisVertical className="ml-4 hidden cursor-pointer xs:block" />
+        ),
+      }}
+      labelChildren="Request actions"
+    >
       <RejectRequestDialog
         // communityId={orgId}
         // userId={userId}
@@ -57,7 +67,7 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
         }}
         formProps={{ action: formAction, children: hiddenInputDataProviders }}
       />
-    </>
+    </AppDropdownMenu>
   );
 }
 

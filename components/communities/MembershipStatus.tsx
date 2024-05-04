@@ -48,6 +48,7 @@ export function MembershipStatus({
 
   return (
     <>
+      {/* TODO: add the show rejection status */}
       <FormProvider action={createRequest}>
         {!userIsMember && !userHasSentRequest && (
           <MembershipDialog

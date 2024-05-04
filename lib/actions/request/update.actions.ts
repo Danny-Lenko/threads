@@ -126,7 +126,7 @@ export async function rejectRequest(
 
     const request = await Request.findOneAndUpdate(
       { _id: new mongoose.Types.ObjectId(validatedFields.data.requestId) },
-      { status: "rejected" },
+      { status: "rejected", message: validatedFields.data.message || "" },
       { new: true, runValidators: true }
     );
 
