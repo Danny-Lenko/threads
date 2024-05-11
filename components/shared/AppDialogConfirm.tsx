@@ -32,7 +32,7 @@ type Props = {
 export const AppDialogConfirm = (props: Props) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger {...props.triggerProps}>
+      <AlertDialogTrigger asChild {...props.triggerProps}>
         {props.triggerProps?.children}
       </AlertDialogTrigger>
       <AlertDialogContent>

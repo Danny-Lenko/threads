@@ -22,13 +22,13 @@ type Props = {
   footerProps?: Partial<HTMLProps<HTMLDivElement>>;
 };
 
-export function AppDialogPropmt(props: Props) {
+export function AppDialogPrompt(props: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild {...props.triggerProps}>
         {props.triggerProps?.children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="z-[150] sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle {...props.titleProps}>
             {props.titleProps?.children}

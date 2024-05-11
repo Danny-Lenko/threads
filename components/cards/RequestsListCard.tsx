@@ -60,23 +60,6 @@ function RequestsListCard({
             requestId={requestId}
             orgName={currentMembership?.organization.name}
           />
-          // <AppDropdownMenu
-          //   contentProps={{ side: "left" }}
-          //   triggerProps={{
-          //     children: (
-          //       <EllipsisVertical className="ml-4 hidden cursor-pointer xs:block" />
-          //     ),
-          //   }}
-          //   labelChildren="Request actions"
-          // >
-          //   <AdminButtons
-          //     userId={userId}
-          //     userName={username}
-          //     orgId={orgId}
-          //     requestId={requestId}
-          //     orgName={currentMembership?.organization.name}
-          //   />
-          // </AppDropdownMenu>
         )}
       </div>
       <p className="ml-[60px] hidden max-w-[300px] overflow-hidden text-ellipsis xs:block sm:max-w-[400px] lg:max-w-[600px]">
@@ -87,3 +70,21 @@ function RequestsListCard({
 }
 
 export default RequestsListCard;
+
+// <AppDropdownMenu
+//   contentProps={{ side: "left" }}
+//   triggerProps={{
+//     children: (
+//       <EllipsisVertical className="ml-4 hidden cursor-pointer xs:block" />
+//     ),
+//   }}
+//   labelChildren="Request actions"
+// >
+//   <AdminButtons
+//     userId={userId}
+//     userName={username}
+//     orgId={orgId}
+//     requestId={requestId}
+//     orgName={currentMembership?.organization.name}
+//   />
+// </AppDropdownMenu>

@@ -4,11 +4,11 @@ import { useContext, useState } from "react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { AppDialogPropmt } from "../shared/AppDialogPrompt";
 import { Textarea } from "../ui/textarea";
 import { AppSubmitButton } from "../shared/AppSubmitButton";
 import { usePathname } from "next/navigation";
 import { FormContext } from "./FormProvider";
+import { AppDialogPrompt } from "../shared/AppDialogPrompt";
 
 interface Props {
   communityId: string;
@@ -60,7 +60,7 @@ export function MembershipDialog({ communityId, userId }: Props) {
   );
 
   return (
-    <AppDialogPropmt
+    <AppDialogPrompt
       triggerProps={{
         children: triggerChildren,
         className:

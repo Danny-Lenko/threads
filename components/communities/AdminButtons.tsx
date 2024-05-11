@@ -2,13 +2,15 @@
 
 import { useContext } from "react";
 import { usePathname } from "next/navigation";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, MessageCirclePlus } from "lucide-react";
 
 import { FormContext } from "./FormProvider";
 // import { Button } from "../ui/button";
-import { AppDialogConfirm } from "../shared/AppDialogConfirm";
+// import { AppDialogConfirm } from "../shared/AppDialogConfirm";
 import { RejectRequestDialog } from "./RejectRequestDialog";
 import { AppDropdownMenu } from "../shared/AppDropdownMenu";
+// import { DropdownMenuItem } from "../ui/dropdown-menu";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 
 interface Props {
   userId: string;
@@ -39,35 +41,28 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
   );
 
   return (
-    <AppDropdownMenu
-      contentProps={{ side: "left" }}
-      triggerProps={{
-        children: (
-          <EllipsisVertical className="ml-4 hidden cursor-pointer xs:block" />
-        ),
-      }}
-      labelChildren="Request actions"
-    >
+    <Dialog>
+      <AppDropdownMenu
+        contentProps={{ side: "left" }}
+        triggerProps={{
+          children: (
+            <EllipsisVertical className="ml-4 hidden cursor-pointer xs:block" />
+          ),
+        }}
+        labelChildren="Request actions"
+      >
+        {/* Accept button dialog */}
+        <DialogTrigger>
+          <MessageCirclePlus />
+        </DialogTrigger>
+      </AppDropdownMenu>
       <RejectRequestDialog
         // communityId={orgId}
         // userId={userId}
         hiddenFormProviders={rejectHiddenProviders}
         action={formAction}
       />
-      {/* Accept button dialog */}
-      <AppDialogConfirm
-        triggerProps={{
-          children: (
-            <div className="user-card_btn !bg-emerald-600 p-2">Accept</div>
-          ),
-        }}
-        titleProps={{ children: "Are you sure?" }}
-        descriptionProps={{
-          children: `User @${userName} will be added to the '${orgName}' community and granted a 'member' role.`,
-        }}
-        formProps={{ action: formAction, children: hiddenInputDataProviders }}
-      />
-    </AppDropdownMenu>
+    </Dialog>
   );
 }
 

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, Fragment } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 
 type Props = {
-  children: ReactNode | ReactNode[];
+  children?: ReactNode | ReactNode[];
   triggerProps?: DropdownMenuTriggerProps;
   contentProps?: DropdownMenuContentProps;
   labelChildren?: ReactNode;
@@ -30,7 +30,7 @@ export const AppDropdownMenu = (props: Props) => {
             <DropdownMenuSeparator />
           </>
         )}
-        {Array.isArray(props.children) ? (
+        {props.children && Array.isArray(props.children) ? (
           props.children.map((child, index) => (
             <DropdownMenuItem key={index}>{child}</DropdownMenuItem>
           ))

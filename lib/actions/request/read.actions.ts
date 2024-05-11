@@ -39,7 +39,7 @@ export async function fetchRequestsByCommunityId(
       model: User,
     });
 
-    return requests.filter((request) => !request.reversionMessage);
+    return requests.filter((request) => !request.rejectionMessage);
   } catch (error) {
     console.error("Error fetching requests: ", error);
     throw error;
