@@ -1,16 +1,21 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { EllipsisVertical, MessageCirclePlus } from "lucide-react";
 
 import { FormContext } from "./FormProvider";
-// import { Button } from "../ui/button";
-// import { AppDialogConfirm } from "../shared/AppDialogConfirm";
 import { RejectRequestDialog } from "./RejectRequestDialog";
-import { AppDropdownMenu } from "../shared/AppDropdownMenu";
-// import { DropdownMenuItem } from "../ui/dropdown-menu";
-import { Dialog, DialogTrigger } from "../ui/dialog";
+import { DialogDescription, DialogTitle } from "../ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { DropdownDialogWrapper } from "./DropdownDialogWrapper";
 
 interface Props {
   userId: string;
@@ -21,6 +26,25 @@ interface Props {
 }
 
 function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [hasOpenDialog, setHasOpenDialog] = useState(false);
+  const dropdownTriggerRef = useRef(null);
+  const focusRef = useRef<HTMLButtonElement | null>(null);
+
+  function handleDialogItemSelect() {
+    focusRef.current = dropdownTriggerRef.current;
+  }
+
+  function handleDialogItemOpenChange(open: boolean) {
+    if (open === false) {
+      setDropdownOpen(false);
+    }
+    // ------------ custom timeout to prevent dropdown flashing on modal close
+    setTimeout(() => {
+      setHasOpenDialog(open);
+    }, 0);
+  }
+
   const formAction = useContext(FormContext);
   const pathname = usePathname();
 
@@ -41,28 +65,57 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
   );
 
   return (
-    <Dialog>
-      <AppDropdownMenu
-        contentProps={{ side: "left" }}
-        triggerProps={{
-          children: (
-            <EllipsisVertical className="ml-4 hidden cursor-pointer xs:block" />
-          ),
+    // -------------- source: https://codesandbox.io/embed/r9sq1q, https://github.com/radix-ui/primitives/issues/1836
+    <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+      <DropdownMenuTrigger asChild>
+        <EllipsisVertical
+          className="ml-4 hidden cursor-pointer xs:block"
+          ref={dropdownTriggerRef}
+        />
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent
+        hidden={hasOpenDialog}
+        onCloseAutoFocus={(event) => {
+          if (focusRef.current) {
+            focusRef.current.focus();
+            focusRef.current = null;
+            event.preventDefault();
+          }
         }}
-        labelChildren="Request actions"
       >
-        {/* Accept button dialog */}
-        <DialogTrigger>
-          <MessageCirclePlus />
-        </DialogTrigger>
-      </AppDropdownMenu>
-      <RejectRequestDialog
-        // communityId={orgId}
-        // userId={userId}
-        hiddenFormProviders={rejectHiddenProviders}
-        action={formAction}
-      />
-    </Dialog>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Items with dialog</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownDialogWrapper
+            triggerChildren={
+              <>
+                <MessageCirclePlus className="h-5 w-5" />
+                Accept
+              </>
+            }
+            onSelect={handleDialogItemSelect}
+            onOpenChange={handleDialogItemOpenChange}
+          >
+            <RejectRequestDialog
+              hiddenFormProviders={rejectHiddenProviders}
+              action={formAction}
+            />
+          </DropdownDialogWrapper>
+
+          <DropdownDialogWrapper
+            triggerChildren="Delete"
+            onSelect={handleDialogItemSelect}
+            onOpenChange={handleDialogItemOpenChange}
+          >
+            <DialogTitle>Delete</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this record?
+            </DialogDescription>
+          </DropdownDialogWrapper>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

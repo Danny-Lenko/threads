@@ -9,7 +9,6 @@ import { AppSubmitButton } from "../shared/AppSubmitButton";
 // import { MessageCircleX } from "lucide-react";
 // import { DropdownMenuItem } from "../ui/dropdown-menu";
 import {
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -60,7 +59,7 @@ export function RejectRequestDialog({
   );
 
   return (
-    <DialogContent className="z-[150] sm:max-w-[425px]">
+    <>
       <DialogHeader>
         <DialogTitle className="text-body-medium">
           Send optional rejection message.
@@ -75,6 +74,6 @@ export function RejectRequestDialog({
           <AppSubmitButton>Done</AppSubmitButton>
         </DialogFooter>
       </form>
-    </DialogContent>
+    </>
   );
 }

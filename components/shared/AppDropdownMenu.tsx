@@ -32,10 +32,23 @@ export const AppDropdownMenu = (props: Props) => {
         )}
         {props.children && Array.isArray(props.children) ? (
           props.children.map((child, index) => (
-            <DropdownMenuItem key={index}>{child}</DropdownMenuItem>
+            <DropdownMenuItem
+              key={index}
+              onSelect={() => {
+                document.body.style.pointerEvents = "";
+              }}
+            >
+              {child}
+            </DropdownMenuItem>
           ))
         ) : (
-          <DropdownMenuItem>{props.children}</DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => {
+              document.body.style.pointerEvents = "";
+            }}
+          >
+            {props.children}
+          </DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
