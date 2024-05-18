@@ -2,11 +2,14 @@
 
 import { useContext, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { EllipsisVertical, MessageCirclePlus } from "lucide-react";
+import {
+  EllipsisVertical,
+  MessageCirclePlus,
+  MessageCircleX,
+} from "lucide-react";
 
 import { FormContext } from "./FormProvider";
 import { RejectRequestDialog } from "./RejectRequestDialog";
-import { DialogDescription, DialogTitle } from "../ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { DropdownDialogWrapper } from "./DropdownDialogWrapper";
+import { AcceptRequestDialog } from "./AcceptRequesDialog";
 
 interface Props {
   userId: string;
@@ -57,6 +61,13 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
     </>
   );
 
+  const acceptHiddenProviders = (
+    <>
+      <input hidden name="message" defaultValue="" />
+      {hiddenInputDataProviders}
+    </>
+  );
+
   const rejectHiddenProviders = (
     <>
       <input hidden name="type" defaultValue="reject" />
@@ -85,7 +96,7 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
         }}
       >
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Items with dialog</DropdownMenuLabel>
+          <DropdownMenuLabel>Request actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownDialogWrapper
             triggerChildren={
@@ -97,21 +108,28 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
             onSelect={handleDialogItemSelect}
             onOpenChange={handleDialogItemOpenChange}
           >
-            <RejectRequestDialog
-              hiddenFormProviders={rejectHiddenProviders}
+            <AcceptRequestDialog
+              hiddenFormProviders={acceptHiddenProviders}
               action={formAction}
+              userName={userName || ""}
+              orgName={orgName || ""}
             />
           </DropdownDialogWrapper>
 
           <DropdownDialogWrapper
-            triggerChildren="Delete"
+            triggerChildren={
+              <>
+                <MessageCircleX className="h-5 w-5 text-red-500" />
+                <span className="text-red-500">Reject</span>
+              </>
+            }
             onSelect={handleDialogItemSelect}
             onOpenChange={handleDialogItemOpenChange}
           >
-            <DialogTitle>Delete</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this record?
-            </DialogDescription>
+            <RejectRequestDialog
+              hiddenFormProviders={rejectHiddenProviders}
+              action={formAction}
+            />
           </DropdownDialogWrapper>
         </DropdownMenuGroup>
       </DropdownMenuContent>

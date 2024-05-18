@@ -1,7 +1,11 @@
 import { forwardRef, LegacyRef, ReactNode } from "react";
 
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { DropdownMenuItem } from "../ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 interface Props {
   triggerChildren: ReactNode;
@@ -15,8 +19,8 @@ export const DropdownDialogWrapper = forwardRef<HTMLButtonElement, Props>(
     const { triggerChildren, children, onSelect, onOpenChange, ...itemProps } =
       props;
     return (
-      <Dialog onOpenChange={onOpenChange}>
-        <DialogTrigger
+      <AlertDialog onOpenChange={onOpenChange}>
+        <AlertDialogTrigger
           asChild
           className="flex w-full cursor-pointer items-center gap-2 text-base-regular"
         >
@@ -31,9 +35,9 @@ export const DropdownDialogWrapper = forwardRef<HTMLButtonElement, Props>(
           >
             {triggerChildren}
           </DropdownMenuItem>
-        </DialogTrigger>
-        <DialogContent>{children}</DialogContent>
-      </Dialog>
+        </AlertDialogTrigger>
+        <AlertDialogContent>{children}</AlertDialogContent>
+      </AlertDialog>
     );
   }
 );
