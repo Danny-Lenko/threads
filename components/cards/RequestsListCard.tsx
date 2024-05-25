@@ -5,7 +5,6 @@ import { useOrganizationList, useOrganization } from "@clerk/nextjs";
 
 import UserCard from "./UserCard";
 import AdminButtons from "../communities/AdminButtons";
-// import { AppDialogConfirm } from "../shared/AppDialogConfirm";
 
 interface Props {
   requestId: string;
@@ -70,21 +69,3 @@ function RequestsListCard({
 }
 
 export default RequestsListCard;
-
-// <AppDropdownMenu
-//   contentProps={{ side: "left" }}
-//   triggerProps={{
-//     children: (
-//       <EllipsisVertical className="ml-4 hidden cursor-pointer xs:block" />
-//     ),
-//   }}
-//   labelChildren="Request actions"
-// >
-//   <AdminButtons
-//     userId={userId}
-//     userName={username}
-//     orgId={orgId}
-//     requestId={requestId}
-//     orgName={currentMembership?.organization.name}
-//   />
-// </AppDropdownMenu>

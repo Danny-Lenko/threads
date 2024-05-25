@@ -3,7 +3,6 @@ import { User } from "@clerk/nextjs/dist/types/server";
 import RequestsListCard from "../cards/RequestsListCard";
 import { IRequestDocument } from "@/lib/models/request.model";
 import AdminButtonsDisabled from "./AdminButtonsDisabled";
-import { AppSeparator } from "../shared/AppSeparator";
 
 interface Props {
   user: User;
@@ -33,7 +32,6 @@ async function RequestsTab({ requests, userIsMember, orgId }: Props) {
 
   return (
     <section className="section gap-7">
-      <AppSeparator>New</AppSeparator>
       {requests.map(({ user, introduction, id }) => {
         if (!("name" in user)) return null;
 
@@ -53,7 +51,6 @@ async function RequestsTab({ requests, userIsMember, orgId }: Props) {
           </RequestsListCard>
         );
       })}
-      <AppSeparator>Reapplied</AppSeparator>
     </section>
   );
 }
