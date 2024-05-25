@@ -32,20 +32,15 @@ async function RequestsTab({ requests, userIsMember, orgId }: Props) {
 
   return (
     <section className="section gap-7">
-      {requests.map(({ user, introduction, id }) => {
-        if (!("name" in user)) return null;
+      {requests.map((request) => {
+        if (!("name" in request.user)) return null;
 
         return (
           <RequestsListCard
-            requestId={id}
-            key={user.id}
-            userId={user.id}
-            name={user.name}
-            username={user.username}
-            imgUrl={user.image!}
-            personType="User"
+            key={request.user.id}
+            request={request}
             orgId={orgId}
-            introduction={introduction}
+            personType="User"
           >
             <AdminButtonsDisabled />
           </RequestsListCard>

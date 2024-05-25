@@ -7,6 +7,7 @@ import {
   MessageCirclePlus,
   MessageCircleX,
 } from "lucide-react";
+import { useOrganization } from "@clerk/nextjs";
 
 import { FormContext } from "./FormProvider";
 import { RejectRequestDialog } from "./RejectRequestDialog";
@@ -26,10 +27,11 @@ interface Props {
   orgId: string;
   requestId: string;
   userName?: string;
-  orgName?: string;
 }
 
-function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
+function AdminButtons({ userName, userId, orgId, requestId }: Props) {
+  const { organization } = useOrganization();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasOpenDialog, setHasOpenDialog] = useState(false);
   const dropdownTriggerRef = useRef(null);
@@ -112,7 +114,7 @@ function AdminButtons({ userName, orgName, userId, orgId, requestId }: Props) {
               hiddenFormProviders={acceptHiddenProviders}
               action={formAction}
               userName={userName || ""}
-              orgName={orgName || ""}
+              orgName={organization?.name || ""}
             />
           </DropdownDialogWrapper>
 

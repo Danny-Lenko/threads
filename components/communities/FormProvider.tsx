@@ -35,11 +35,7 @@ export const FormContext = createContext<(payload: FormData) => void>(() => {});
 export function FormProvider({ children, action }: Props) {
   const { toast } = useToast();
 
-  // console.log("ACTION:", action);
-
   const [formState, formAction] = useFormState(action, formInitialState);
-
-  // console.log("FORMSTATE:", formState);
 
   useEffect(() => {
     if ("errors" in formState && formState.errors) {

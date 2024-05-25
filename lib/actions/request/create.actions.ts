@@ -66,14 +66,31 @@ export async function createRequest(
         errors: { databaseError: "User not found" },
       };
     }
+
+    let tag = "new";
+
+    // Find the latest request from the same user
+    const latestRequest = await Request.findOne({
+      user: user._id,
+    }).sort({ createdAt: -1 });
+
+    if (latestRequest) {
+      if (latestRequest.status === "rejected") {
+        tag = "revision";
+      } else if (latestRequest.status === "accepted") {
+        tag = "resubmission";
+      }
+    }
+
     await Request.create({
       user: user._id,
       community: community._id,
       introduction: validatedFields.data.introduction,
+      tag,
     });
     revalidatePath(validatedFields.data.pathname);
     return { message: "Request sent successfully" };
   } catch (error: any) {
-    throw new Error(`Failed to create repost: ${error.message}`);
+    throw new Error(`Failed to create request: ${error.message}`);
   }
 }

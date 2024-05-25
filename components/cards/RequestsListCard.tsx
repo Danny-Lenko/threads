@@ -1,41 +1,32 @@
-"use client";
-
 import { ReactElement } from "react";
-import { useOrganizationList, useOrganization } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { Tag } from "lucide-react";
 
 import UserCard from "./UserCard";
 import AdminButtons from "../communities/AdminButtons";
+import { IRequestDocument } from "@/lib/models/request.model";
 
 interface Props {
-  requestId: string;
-  userId: string;
-  name: string;
-  username: string;
-  imgUrl: string;
+  request: IRequestDocument;
   personType: string;
   orgId: string;
-  introduction: string;
   children: ReactElement;
 }
 
 function RequestsListCard({
-  requestId,
-  userId,
-  name,
-  username,
-  imgUrl,
+  request: { user, introduction, _id: requestId },
+  request,
   personType,
   orgId,
-  introduction,
   children,
 }: Props) {
-  const { organizationList } = useOrganizationList();
-  const organization = useOrganization();
-  const currentMembership = organizationList?.find(
-    (org) => org.organization.id === orgId
-  );
-  const organizationMatches = organization.organization?.id === orgId;
-  const role = currentMembership?.membership.role.toString();
+  const { has } = auth();
+  const isAdmin = has({ role: "org:admin" });
+
+  if (!("name" in user)) return null;
+  const { id: userId, name, username, image: imgUrl } = user;
+
+  console.log("REQUEST:", request);
 
   return (
     <div>
@@ -44,21 +35,26 @@ function RequestsListCard({
           id={userId}
           name={name}
           username={username}
-          imgUrl={imgUrl}
+          imgUrl={imgUrl!}
           personType={personType}
         />
 
-        {/* Passing as children to keep it ssr */}
-        {role === "org:admin" && !organizationMatches && children}
+        <div
+          title="New"
+          className="absolute right-[calc(150rem/16)] cursor-pointer"
+        >
+          <Tag className="text-green-700" fill="" />
+        </div>
 
-        {role === "org:admin" && organizationMatches && (
+        {isAdmin ? (
           <AdminButtons
             userId={userId}
             userName={username}
             orgId={orgId}
             requestId={requestId}
-            orgName={currentMembership?.organization.name}
           />
+        ) : (
+          children
         )}
       </div>
       <p className="ml-[60px] hidden max-w-[300px] overflow-hidden text-ellipsis xs:block sm:max-w-[400px] lg:max-w-[600px]">

@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
 type RequestStatus = "pending" | "accepted" | "rejected";
+type RequesTag = "new" | "revision" | "resubmission";
 
 export interface User {
   _id: Types.ObjectId;
@@ -16,33 +17,41 @@ export interface IRequestDocument extends Document {
   introduction: string;
   status: RequestStatus;
   rejectionMessage?: string;
+  tag: RequesTag;
 }
 
-const requestSchema: Schema<IRequestDocument> = new Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
+const requestSchema: Schema<IRequestDocument> = new Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    community: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Community",
+      required: true,
+    },
+    introduction: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      default: "pending",
+    },
+    rejectionMessage: {
+      type: String,
+      default: undefined,
+    },
+    tag: {
+      type: String,
+      default: "new",
+    },
   },
-  community: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Community",
-    required: true,
-  },
-  introduction: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: String,
-    required: true,
-    default: "pending",
-  },
-  rejectionMessage: {
-    type: String,
-    default: undefined,
-  },
-});
+  { timestamps: true }
+);
 
 const Request =
   mongoose.models.Request ||
