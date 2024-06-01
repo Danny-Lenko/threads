@@ -22,6 +22,8 @@ async function Page({ params: { id } }: { params: { id: string } }) {
   const members = communityDetails.members as User[];
   const userIsMember = !!members.find((member) => member.id === user.id);
 
+  console.log("Community Details:", communityDetails);
+
   const requests = await fetchPendingRequestsByCommunityId(
     communityDetails._id
   );

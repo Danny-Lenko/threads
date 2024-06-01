@@ -1,16 +1,15 @@
-import { ReactElement } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { Tag } from "lucide-react";
 
+import { IRequestDocument } from "@/lib/models/request.model";
 import UserCard from "./UserCard";
 import AdminButtons from "../communities/AdminButtons";
-import { IRequestDocument } from "@/lib/models/request.model";
+import AdminButtonsDisabled from "../communities/AdminButtonsDisabled";
 
 interface Props {
   request: IRequestDocument;
   personType: string;
   orgId: string;
-  children: ReactElement;
 }
 
 function RequestsListCard({
@@ -18,10 +17,15 @@ function RequestsListCard({
   request,
   personType,
   orgId,
-  children,
 }: Props) {
-  const { has } = auth();
-  const isAdmin = has({ role: "org:admin" });
+  const { orgId: communityId } = auth();
+  // const { has } = auth();
+  // const isAdmin = has({ role: "org:admin" });
+  // const isMember = has({ role: "org:member" });
+
+  // console.log("AuthInfo:", authInfo);
+
+  const isCommunityAccount = communityId === orgId;
 
   if (!("name" in user)) return null;
   const { id: userId, name, username, image: imgUrl } = user;
@@ -46,15 +50,15 @@ function RequestsListCard({
           <Tag className="text-green-700" fill="" />
         </div>
 
-        {isAdmin ? (
+        {!isCommunityAccount && <AdminButtonsDisabled orgId={orgId} />}
+
+        {isCommunityAccount && (
           <AdminButtons
             userId={userId}
             userName={username}
             orgId={orgId}
             requestId={requestId}
           />
-        ) : (
-          children
         )}
       </div>
       <p className="ml-[60px] hidden max-w-[300px] overflow-hidden text-ellipsis xs:block sm:max-w-[400px] lg:max-w-[600px]">

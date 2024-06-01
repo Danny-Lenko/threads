@@ -41,9 +41,7 @@ async function RequestsTab({ requests, userIsMember, orgId }: Props) {
             request={request}
             orgId={orgId}
             personType="User"
-          >
-            <AdminButtonsDisabled />
-          </RequestsListCard>
+          />
         );
       })}
     </section>

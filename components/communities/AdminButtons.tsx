@@ -7,7 +7,7 @@ import {
   MessageCirclePlus,
   MessageCircleX,
 } from "lucide-react";
-import { useOrganization } from "@clerk/nextjs";
+import { useOrganization, useOrganizationList } from "@clerk/nextjs";
 
 import { FormContext } from "./FormProvider";
 import { RejectRequestDialog } from "./RejectRequestDialog";
@@ -29,8 +29,21 @@ interface Props {
   userName?: string;
 }
 
-function AdminButtons({ userName, userId, orgId, requestId }: Props) {
+function AdminButtons({ userName, orgId, userId, requestId }: Props) {
   const { organization } = useOrganization();
+
+  const { isLoaded, setActive, userMemberships } = useOrganizationList({
+    userMemberships: {
+      infinite: true,
+    },
+  });
+
+  console.log("orgId:", orgId);
+
+  console.log(
+    "USER MEMBERSHIPS:",
+    userMemberships.data?.filter((org) => org.role === "org:admin")
+  );
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasOpenDialog, setHasOpenDialog] = useState(false);
