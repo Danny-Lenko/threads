@@ -1,8 +1,9 @@
 import { User } from "@clerk/nextjs/dist/types/server";
+import { auth } from "@clerk/nextjs/server";
+import { Info } from "lucide-react";
 
 import RequestsListCard from "../cards/RequestsListCard";
 import { IRequestDocument } from "@/lib/models/request.model";
-import AdminButtonsDisabled from "./AdminButtonsDisabled";
 
 interface Props {
   user: User;
@@ -12,6 +13,19 @@ interface Props {
 }
 
 async function RequestsTab({ requests, userIsMember, orgId }: Props) {
+  const { orgId: communityId, has } = auth();
+  const isAdmin = has({ role: "org:admin" });
+  // const isMember = has({ role: "org:member" });
+
+  console.log("isAdmin:", isAdmin);
+
+  const isCommunityAccount = communityId === orgId;
+
+  const infoTitle =
+    !communityId || !isCommunityAccount
+      ? "To manage membership requests log in with the organization account"
+      : "Only administators can manage membership requests";
+
   if (!userIsMember)
     return (
       <section className="section">
@@ -31,7 +45,12 @@ async function RequestsTab({ requests, userIsMember, orgId }: Props) {
     );
 
   return (
-    <section className="section gap-7">
+    <section className="section relative gap-7">
+      {!isAdmin && (
+        <div className="absolute -top-6 right-0" title={infoTitle}>
+          <Info className="h-5 w-5" />
+        </div>
+      )}
       {requests.map((request) => {
         if (!("name" in request.user)) return null;
 
@@ -39,8 +58,9 @@ async function RequestsTab({ requests, userIsMember, orgId }: Props) {
           <RequestsListCard
             key={request.user.id}
             request={request}
-            orgId={orgId}
             personType="User"
+            orgId={orgId}
+            isAdmin={isAdmin}
           />
         );
       })}
