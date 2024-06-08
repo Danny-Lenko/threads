@@ -14,10 +14,12 @@ export async function fetchPendingRequestsByCommunityId(
     const requests: IRequestDocument[] = await Request.find({
       community: id,
       status: "pending",
-    }).populate({
-      path: "user",
-      model: User,
-    });
+    })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "user",
+        model: User,
+      });
 
     return requests;
   } catch (error) {

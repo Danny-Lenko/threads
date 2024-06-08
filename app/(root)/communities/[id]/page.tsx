@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs";
 import { communityTabs } from "@/constants";
 import UserCard from "@/components/cards/UserCard";
 import ThreadsTab from "@/components/shared/ThreadsTab";
-import ProfileHeader from "@/components/shared/ProfileHeader";
+import { ProfileHeader } from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormProvider } from "@/components/communities/FormProvider";
 import RequestsTab from "@/components/communities/RequestsTab";
@@ -14,9 +14,18 @@ import { fetchPendingRequestsByCommunityId } from "@/lib/actions/request/read.ac
 import { User } from "@/lib/models/community.model";
 import { acceptOrRejectRequest } from "@/lib/actions/request/update.actions";
 
-async function Page({ params: { id } }: { params: { id: string } }) {
+interface Props {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+async function Page({ params: { id }, searchParams }: Props) {
+  // async function Page({ params: { id } }: { params: { id: string } }) {
+
   const user = await currentUser();
   if (!user) return null;
+
+  console.log("SEARCH PARAMS:", searchParams);
 
   const communityDetails = await fetchCommunityDetails(id);
   const members = communityDetails.members as User[];
@@ -41,14 +50,7 @@ async function Page({ params: { id } }: { params: { id: string } }) {
 
   return (
     <section className="relative">
-      <ProfileHeader
-        image={communityDetails.image}
-        name={communityDetails.name}
-        username={communityDetails.username}
-        bio={communityDetails.bio}
-      >
-        {profileHeaderChildren}
-      </ProfileHeader>
+      <ProfileHeader communityId={id}>{profileHeaderChildren}</ProfileHeader>
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">

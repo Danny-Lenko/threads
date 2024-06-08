@@ -1,16 +1,34 @@
 import { ReactNode } from "react";
 import Image from "next/image";
 import { AppSeparator } from "./AppSeparator";
+import { fetchUser } from "@/lib/actions/user";
+import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 
-interface Props {
-  image?: string;
-  name: string;
-  username: string;
-  bio?: string;
+type UserProps = {
+  userId: string;
+  communityId?: never;
   children?: ReactNode;
-}
+};
 
-function ProfileHeader({ image, name, username, bio, children }: Props) {
+type CommunityProps = {
+  userId?: never;
+  communityId: string;
+  children?: ReactNode;
+};
+
+type Props = UserProps | CommunityProps;
+
+export async function ProfileHeader({ children, ...props }: Props) {
+  let data;
+
+  if ("userId" in props) {
+    data = await fetchUser(props.userId!);
+  } else {
+    data = await fetchCommunityDetails(props.communityId!);
+  }
+
+  const { name, username, image, bio } = data;
+
   return (
     <div className="flex w-full flex-col justify-start">
       <div className="relative flex items-center justify-between">
@@ -39,5 +57,3 @@ function ProfileHeader({ image, name, username, bio, children }: Props) {
     </div>
   );
 }
-
-export default ProfileHeader;

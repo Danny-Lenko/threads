@@ -7,7 +7,7 @@ import { MembershipBadge } from "./MembershipBadge";
 import { MembershipDialog } from "./MembershipDialog";
 import { FormProvider } from "./FormProvider";
 
-export function MembershipStatus({
+export async function MembershipStatus({
   communityDetails,
   user,
   userHasSentRequest,

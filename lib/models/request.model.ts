@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
 type RequestStatus = "pending" | "accepted" | "rejected";
-type RequesTag = "new" | "revision" | "resubmission";
+type RequestTag = "new" | "revision" | "resubmission";
 
 export interface User {
   _id: Types.ObjectId;
@@ -17,7 +17,7 @@ export interface IRequestDocument extends Document {
   introduction: string;
   status: RequestStatus;
   rejectionMessage?: string;
-  tag: RequesTag;
+  tag: RequestTag;
 }
 
 const requestSchema: Schema<IRequestDocument> = new Schema(

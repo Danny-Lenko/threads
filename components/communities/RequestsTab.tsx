@@ -15,9 +15,6 @@ interface Props {
 async function RequestsTab({ requests, userIsMember, orgId }: Props) {
   const { orgId: communityId, has } = auth();
   const isAdmin = has({ role: "org:admin" });
-  // const isMember = has({ role: "org:member" });
-
-  console.log("isAdmin:", isAdmin);
 
   const isCommunityAccount = communityId === orgId;
 
