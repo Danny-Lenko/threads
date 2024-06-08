@@ -70,6 +70,10 @@ export async function fetchCommunityDetails(
       // },
     ]);
 
+    if (!communityDetails) {
+      throw new Error("Community not found");
+    }
+
     return communityDetails;
   } catch (error) {
     console.error("Error fetching community details:", error);

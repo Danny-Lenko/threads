@@ -29,7 +29,7 @@ async function Page({ params }: { params: { id: string } }) {
 
   return (
     <section>
-      <ProfileHeader userId={params.id}>{profileHeaderChildren}</ProfileHeader>
+      <ProfileHeader {...userInfo}>{profileHeaderChildren}</ProfileHeader>
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">
@@ -76,6 +76,7 @@ async function Page({ params }: { params: { id: string } }) {
               currentUserId={user.id}
               accountId={userInfo._id}
               accountType="UserReposts"
+              id=""
             />
           </TabsContent>
         </Tabs>

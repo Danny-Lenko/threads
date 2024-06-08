@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { User } from "@clerk/nextjs/dist/types/server";
 
 import { createRequest } from "@/lib/actions/request/create.actions";
 import { ICommunityDocument } from "@/lib/models/community.model";
@@ -7,20 +6,20 @@ import { MembershipBadge } from "./MembershipBadge";
 import { MembershipDialog } from "./MembershipDialog";
 import { FormProvider } from "./FormProvider";
 
-export async function MembershipStatus({
-  communityDetails,
-  user,
-  userHasSentRequest,
-}: {
-  communityDetails: ICommunityDocument;
-  user: User;
+type Props = {
   userHasSentRequest: boolean;
-}) {
-  const members = communityDetails.members;
-  const userIsMember = members.some(
-    (member) =>
-      typeof member === "object" && "_id" in member && member.id === user.id
-  );
+  communityDetails: ICommunityDocument;
+  userIsMember: boolean;
+  userId: string;
+};
+
+export async function MembershipStatus({
+  userHasSentRequest,
+  communityDetails,
+  userIsMember,
+  userId,
+}: Props) {
+  // const { userHasSentRequest, communityDetails, userIsMember, userId } = props;
 
   const membershipBadgeContent = userHasSentRequest ? (
     <>
@@ -51,10 +50,7 @@ export async function MembershipStatus({
       {/* TODO: add the show rejection status */}
       <FormProvider action={createRequest}>
         {!userIsMember && !userHasSentRequest && (
-          <MembershipDialog
-            communityId={communityDetails.id}
-            userId={user.id}
-          />
+          <MembershipDialog communityId={communityDetails.id} userId={userId} />
         )}
       </FormProvider>
       {(userIsMember || userHasSentRequest) && (
