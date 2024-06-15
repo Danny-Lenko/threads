@@ -29,7 +29,7 @@ async function Page({ params }: { params: { id: string } }) {
 
   return (
     <section>
-      <ProfileHeader {...userInfo}>{profileHeaderChildren}</ProfileHeader>
+      <ProfileHeader data={userInfo}>{profileHeaderChildren}</ProfileHeader>
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">

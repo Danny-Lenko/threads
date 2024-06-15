@@ -7,7 +7,7 @@ import { MembershipStatus } from "@/components/communities/MembershipStatus";
 import CommunityTabsList from "@/components/communities/CommunityTabsList";
 import MembersTab from "@/components/communities/MembersTab";
 import { acceptOrRejectRequest } from "@/lib/actions/request/update.actions";
-import { getOneCommunityData } from "@/lib/helpers/communities";
+import { getOneCommunityData } from "@/lib/helpers/communities/getOneCommunityData";
 
 interface Props {
   params: { id: string };
@@ -17,6 +17,7 @@ interface Props {
 async function Page({ params: { id }, searchParams }: Props) {
   const data = await getOneCommunityData({ id });
   if (!data) return null;
+
   const {
     communityDetails,
     membershipBadgeProps,
@@ -27,7 +28,7 @@ async function Page({ params: { id }, searchParams }: Props) {
 
   return (
     <section className="relative">
-      <ProfileHeader {...communityDetails}>
+      <ProfileHeader data={communityDetails}>
         <MembershipStatus {...membershipBadgeProps} />
       </ProfileHeader>
 

@@ -3,18 +3,17 @@ import Image from "next/image";
 import { AppSeparator } from "./AppSeparator";
 
 type Props = {
-  image?: string;
-  name?: string;
-  username?: string;
-  bio?: string;
+  data: {
+    image?: string;
+    name?: string;
+    username?: string;
+    bio?: string;
+  };
   children?: ReactNode;
 };
 
 export async function ProfileHeader({
-  image,
-  name,
-  username,
-  bio,
+  data: { image, name, username, bio },
   children,
 }: Props) {
   return (
