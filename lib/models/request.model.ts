@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
 type RequestStatus = "pending" | "accepted" | "rejected";
-type RequestTag = "new" | "revision" | "resubmission";
+export type RequestTag = "new" | "revision" | "resubmission";
 
 export interface User {
   _id: Types.ObjectId;

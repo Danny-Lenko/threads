@@ -4,22 +4,50 @@ import { connectToDB } from "../../mongoose";
 
 import Request, { IRequestDocument } from "@/lib/models/request.model";
 import User from "@/lib/models/user.model";
+import { PipelineStage } from "mongoose";
 
 export async function fetchPendingRequestsByCommunityId(
-  id: string
+  id: string,
+  searchParams?: { tag: string }
 ): Promise<IRequestDocument[]> {
   try {
     connectToDB();
 
-    const requests: IRequestDocument[] = await Request.find({
-      community: id,
-      status: "pending",
-    })
-      .sort({ createdAt: -1 })
-      .populate({
-        path: "user",
-        model: User,
-      });
+    const matchCondition = { community: id, status: "pending" };
+
+    const pipeline: PipelineStage[] = [
+      { $match: matchCondition },
+      {
+        $addFields: {
+          tagMatch: searchParams?.tag
+            ? { $cond: [{ $eq: ["$tag", searchParams.tag] }, 1, 0] }
+            : 0,
+        },
+      },
+      { $sort: { tagMatch: -1, createdAt: -1 } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+    ];
+
+    const requests: IRequestDocument[] = await Request.aggregate(pipeline);
+
+    // not using aggregation, not using tag sorting
+    // const requests: IRequestDocument[] = await Request.find({
+    //   community: id,
+    //   status: "pending",
+    // })
+    //   .sort({ createdAt: -1 })
+    //   .populate({
+    //     path: "user",
+    //     model: User,
+    //   });
 
     return requests;
   } catch (error) {

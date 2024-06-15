@@ -11,11 +11,11 @@ import { getOneCommunityData } from "@/lib/helpers/communities/getOneCommunityDa
 
 interface Props {
   params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: { tag: string };
 }
 
 async function Page({ params: { id }, searchParams }: Props) {
-  const data = await getOneCommunityData({ id });
+  const data = await getOneCommunityData({ id, searchParams });
   if (!data) return null;
 
   const {

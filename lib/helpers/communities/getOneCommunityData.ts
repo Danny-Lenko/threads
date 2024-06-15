@@ -6,9 +6,10 @@ import { User } from "@/lib/models/community.model";
 
 type Params = {
   id: string;
+  searchParams?: { tag: string };
 };
 
-export async function getOneCommunityData({ id }: Params) {
+export async function getOneCommunityData({ id, searchParams }: Params) {
   const user = await currentUser();
   if (!user) return null;
 
@@ -19,7 +20,8 @@ export async function getOneCommunityData({ id }: Params) {
   const userIsMember = !!members.find((member) => member.id === userId);
 
   const requests = await fetchPendingRequestsByCommunityId(
-    communityDetails._id
+    communityDetails._id,
+    searchParams
   );
   const userHasSentRequest = !!requests.find(
     (request) => request.user.id === userId

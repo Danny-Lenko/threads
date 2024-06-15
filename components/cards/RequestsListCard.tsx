@@ -1,8 +1,7 @@
-import { Tag } from "lucide-react";
-
 import { IRequestDocument } from "@/lib/models/request.model";
 import UserCard from "./UserCard";
 import AdminButtons from "../communities/AdminButtons";
+import { RequestTag } from "../communities/RequestTag";
 
 interface Props {
   request: IRequestDocument;
@@ -11,7 +10,7 @@ interface Props {
   isAdmin: boolean;
 }
 
-function RequestsListCard({
+async function RequestsListCard({
   request: { user, introduction, _id: requestId, tag },
   personType,
   orgId,
@@ -19,15 +18,6 @@ function RequestsListCard({
 }: Props) {
   if (!("name" in user)) return null;
   const { id: userId, name, username, image: imgUrl } = user;
-
-  console.log("tag:", tag);
-
-  const tagColor =
-    tag === "new"
-      ? "text-green-700"
-      : tag === "revision"
-      ? "text-sky-700"
-      : "text-yellow-600";
 
   return (
     <div>
@@ -42,17 +32,8 @@ function RequestsListCard({
 
         {isAdmin && (
           <>
-            <div
-              title={
-                tag.toString().charAt(0).toUpperCase() + tag.toString().slice(1)
-              }
-              className="absolute right-[calc(150rem/16)] cursor-pointer"
-            >
-              <Tag
-                className={tagColor}
-                fill=""
-              />
-            </div>
+            <RequestTag tag={tag} />
+
             <AdminButtons
               userId={userId}
               userName={username}
