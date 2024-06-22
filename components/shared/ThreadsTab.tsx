@@ -4,6 +4,7 @@ import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 import { fetchUserPosts, fetchUserReposts } from "@/lib/actions/user";
 
 import ThreadCard from "../cards/ThreadCard";
+import { TabsContent } from "../ui/tabs";
 
 interface Thread {
   _id: string;
@@ -39,9 +40,15 @@ interface Props {
   currentUserId: string;
   accountId: string;
   accountType: string;
+  id: string;
 }
 
-async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
+async function ThreadsTab({
+  currentUserId,
+  accountId,
+  accountType,
+  id,
+}: Props) {
   let result: Result | undefined;
   let threads: Thread[];
 
@@ -63,48 +70,61 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
     redirect("/");
   }
 
+  if (!threads.length)
+    return (
+      <TabsContent value="threads" className="w-full text-light-1">
+        <section className="section">
+          <h2 className="text-center text-heading3-semibold text-slate-500">
+            No threads yet
+          </h2>
+        </section>
+      </TabsContent>
+    );
+
   return (
-    <section className="mt-9 flex flex-col gap-10">
-      {threads.map((thread) => (
-        <ThreadCard
-          key={thread._id}
-          id={thread._id}
-          currentUserId={currentUserId}
-          parentId={thread.parentId}
-          content={
-            accountType === "UserReposts" ? thread.source!.text : thread.text
-          }
-          author={
-            accountType === "User"
-              ? { name: result!.name, image: result!.image, id: result!.id }
-              : accountType === "UserReposts"
-              ? {
-                  name: thread.source!.author.name,
-                  image: thread.source!.author.image,
-                  id: thread.source!.author.id,
-                }
-              : {
-                  name: thread.author.name,
-                  image: thread.author.image,
-                  id: thread.author.id,
-                }
-          }
-          community={
-            accountType === "Community"
-              ? { name: result!.name, id: result!.id, image: result!.image }
-              : accountType === "UserReposts"
-              ? thread.source!.community
-              : thread.community
-          }
-          createdAt={thread.createdAt}
-          comments={
-            accountType === "UserReposts"
-              ? thread.source!.children
-              : thread.children
-          }
-        />
-      ))}
-    </section>
+    <TabsContent value="threads" className="w-full text-light-1">
+      <section className="section">
+        {threads.map((thread) => (
+          <ThreadCard
+            key={thread._id}
+            id={thread._id}
+            currentUserId={currentUserId}
+            parentId={thread.parentId}
+            content={
+              accountType === "UserReposts" ? thread.source!.text : thread.text
+            }
+            author={
+              accountType === "User"
+                ? { name: result!.name, image: result!.image, id: result!.id }
+                : accountType === "UserReposts"
+                ? {
+                    name: thread.source!.author.name,
+                    image: thread.source!.author.image,
+                    id: thread.source!.author.id,
+                  }
+                : {
+                    name: thread.author.name,
+                    image: thread.author.image,
+                    id: thread.author.id,
+                  }
+            }
+            community={
+              accountType === "Community"
+                ? { name: result!.name, id: result!.id, image: result!.image }
+                : accountType === "UserReposts"
+                ? thread.source!.community
+                : thread.community
+            }
+            createdAt={thread.createdAt}
+            comments={
+              accountType === "UserReposts"
+                ? thread.source!.children
+                : thread.children
+            }
+          />
+        ))}
+      </section>
+    </TabsContent>
   );
 }
 

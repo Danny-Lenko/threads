@@ -24,8 +24,6 @@ async function Home({
     30
   );
 
-  console.log("RESULT:", result);
-
   return (
     <>
       <h1 className="head-text text-left">Home</h1>

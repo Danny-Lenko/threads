@@ -9,6 +9,8 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 import Bottombar from "@/components/shared/Bottombar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Toaster } from "../../components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,20 +30,28 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
-      <html lang='en'>
+      <html lang="en">
         <body className={inter.className}>
-          <Topbar />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Topbar />
 
-          <main className='flex flex-row'>
-            <LeftSidebar />
-            <section className='main-container'>
-              <div className='w-full max-w-4xl'>{children}</div>
-            </section>
-            {/* @ts-ignore */}
-            <RightSidebar />
-          </main>
+            <main className="flex flex-row">
+              <LeftSidebar />
+              <section className="main-container">
+                <div className="w-full max-w-4xl">{children}</div>
+              </section>
+              {/* @ts-ignore */}
+              <RightSidebar />
+            </main>
 
-          <Bottombar />
+            <Bottombar />
+            <Toaster />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

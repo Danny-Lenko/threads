@@ -1,124 +1,53 @@
-import Image from "next/image";
-import { currentUser } from "@clerk/nextjs";
-
-import { communityTabs } from "@/constants";
-
-import UserCard from "@/components/cards/UserCard";
 import ThreadsTab from "@/components/shared/ThreadsTab";
-import ProfileHeader from "@/components/shared/ProfileHeader";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProfileHeader } from "@/components/shared/ProfileHeader";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { FormProvider } from "@/components/communities/FormProvider";
+import RequestsTab from "@/components/communities/RequestsTab";
+import { MembershipStatus } from "@/components/communities/MembershipStatus";
+import CommunityTabsList from "@/components/communities/CommunityTabsList";
+import MembersTab from "@/components/communities/MembersTab";
+import { acceptOrRejectRequest } from "@/lib/actions/request/update.actions";
+import { getOneCommunityData } from "@/lib/helpers/communities/getOneCommunityData";
 
-import { MembershipDialog } from "@/components/communities/MembershipDialog";
+interface Props {
+  params: { id: string };
+  searchParams?: { tag: string };
+}
 
-import { fetchCommunityDetails } from "@/lib/actions/community.actions";
-import { MembershipBadge } from "@/components/communities/MembershipBadge";
-import MembershipRequestCard from "@/components/cards/MembershipRequestCard";
-import { User } from "@/lib/models/community.model";
+async function Page({ params: { id }, searchParams }: Props) {
+  const data = await getOneCommunityData({ id, searchParams });
+  if (!data) return null;
 
-async function Page({ params: { id } }: { params: { id: string } }) {
-  const user = await currentUser();
-  if (!user) return null;
-
-  const communityDetails = await fetchCommunityDetails(id);
-  const members = communityDetails.members as User[];
-
-  console.log("COMMUNITY:", communityDetails);
-
-  // let userIsNotMember;
-
-  const userIsNotMember = members?.find((member) => member.id !== user.id);
+  const {
+    communityDetails,
+    membershipBadgeProps,
+    threadsTabProps,
+    members,
+    requestsTabProps,
+  } = data;
 
   return (
     <section className="relative">
-      <ProfileHeader
-        accountId={communityDetails.createdBy?.id as string}
-        authUserId={user.id}
-        name={communityDetails.name}
-        username={communityDetails.username}
-        imgUrl={communityDetails.image!}
-        bio={communityDetails.bio!}
-        type="Community"
-      />
-
-      {!!userIsNotMember && (
-        <MembershipDialog communityId={communityDetails.id} userId={user.id} />
-      )}
-      {!userIsNotMember && (
-        <MembershipBadge>You&apos;re a member</MembershipBadge>
-      )}
+      <ProfileHeader data={communityDetails}>
+        <MembershipStatus {...membershipBadgeProps} />
+      </ProfileHeader>
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">
-          <TabsList className="tab">
-            {communityTabs.map((tab) => (
-              <TabsTrigger key={tab.label} value={tab.value} className="tab">
-                <Image
-                  src={tab.icon}
-                  alt={tab.label}
-                  width={24}
-                  height={24}
-                  className="object-contain"
-                />
-                <p className="max-sm:hidden">{tab.label}</p>
-
-                {tab.label === "Threads" && (
-                  <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
-                    {communityDetails.threads?.length}
-                  </p>
-                )}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <CommunityTabsList communityDetails={communityDetails} />
 
           <TabsContent value="threads" className="w-full text-light-1">
-            {/* @ts-ignore */}
-            <ThreadsTab
-              currentUserId={user.id}
-              accountId={communityDetails._id}
-              accountType="Community"
-            />
+            <ThreadsTab {...threadsTabProps} />
           </TabsContent>
 
           <TabsContent value="members" className="mt-9 w-full text-light-1">
-            <section className="mt-9 flex flex-col gap-10">
-              {members.map((member) => (
-                <UserCard
-                  key={member.id}
-                  id={member.id}
-                  name={member.name}
-                  username={member.username}
-                  imgUrl={member.image!}
-                  personType="User"
-                />
-              ))}
-            </section>
+            <MembersTab members={members} />
           </TabsContent>
 
           <TabsContent value="requests" className="w-full text-light-1">
-            {/* @ts-ignore */}
-            <section className="mt-9 flex flex-col gap-7">
-              {userIsNotMember ? (
-                <h2 className="text-center text-heading3-semibold text-slate-500">
-                  This content is for members only
-                </h2>
-              ) : (
-                communityDetails.requests.map(({ user, introduction }) => {
-                  if (!("name" in user)) return null;
-
-                  return (
-                    <MembershipRequestCard
-                      key={user.id}
-                      id={user.id}
-                      name={user.name}
-                      username={user.username}
-                      imgUrl={user.image!}
-                      personType="User"
-                      orgId={communityDetails.id}
-                    />
-                  );
-                })
-              )}
-            </section>
+            <FormProvider action={acceptOrRejectRequest}>
+              <RequestsTab {...requestsTabProps} />
+            </FormProvider>
           </TabsContent>
         </Tabs>
       </div>
